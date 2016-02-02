@@ -1,7 +1,7 @@
 use super::{Zero};
 use traits::{Cross, InnerProduct, Metric, Norm, Vector};
 
-use std::ops::{Add, Sub, Mul, Div, Neg};
+use std::ops::{Add, Sub, Mul, Div, Neg, Index, IndexMut};
 
 macro_rules! as_expr {
     ($x:expr) => ($x)
@@ -348,20 +348,72 @@ macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $($else_:ident)*) => ();
 }
 
+macro_rules! _expansion_trick {
+    ($id:ident, $e:expr) => ($e)
+}
+
+macro_rules! _zip_fold_consts {
+    ($acc:expr, $fid:ident $(,$id:ident)*) => (
+        const $fid: usize = $acc;
+        _zip_fold_consts!(($fid + 1), $($id),*);
+    );
+    ($acc:expr, ) => ();
+}
+
 #[macro_export]
 macro_rules! ntuple_space {
     (
         $name:ident: $t:ty {
             $($e:ident),*
         }
-
-        $( $rest:tt )*
     ) => (
         vector_space! {
             $name {
                 { $($e: $t),* }
 
                 Scalar = $t;
+            }
+        }
+
+        impl From<$name> for [$t; _sum!($(_expansion_trick!($e, 1)),*)] {
+            fn from(t: $name) -> Self {
+                [ $(t.$e),* ]
+            }
+        }
+
+        impl From<[$t; _sum!($(_expansion_trick!($e, 1)),*)]> for $name {
+            #[allow(non_upper_case_globals)]
+            fn from(arr: [$t; _sum!($(_expansion_trick!($e, 1)),*)]) -> Self {
+                _zip_fold_consts!(0usize, $($e),*);
+                $name { $($e: arr[$e]),* }
+            }
+        }
+
+        impl Index<usize> for $name {
+            type Output = $t;
+
+            #[allow(non_upper_case_globals)]
+            fn index(&self, index: usize) -> &$t {
+                _zip_fold_consts!(0usize, $($e),*);
+                match index {
+                    $(
+                        $e => &self.$e,
+                    )*
+                    _ => panic!("n-tuple vector index out of bounds!"),
+                }
+            }
+        }
+
+        impl IndexMut<usize> for $name {
+            #[allow(non_upper_case_globals)]
+            fn index_mut(&mut self, index: usize) -> &mut $t {
+                _zip_fold_consts!(0usize, $($e),*);
+                match index {
+                    $(
+                        $e => &mut self.$e,
+                    )*
+                    _ => panic!("n-tuple vector index out of bounds!"),
+                }
             }
         }
     );
@@ -377,7 +429,7 @@ macro_rules! euclidean_space {
     ) => (
         ntuple_space! {
             $name: $t {
-                $($e)*
+                $($e),*
             }
         }
 
