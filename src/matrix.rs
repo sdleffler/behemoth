@@ -900,8 +900,8 @@ macro_rules! matrices {
 
                     #[inline]
                     fn add(self, rhs: $tyname) -> $tyname {
-                        let mut out = self.0;
-                        for (i, row) in rhs.0.iter().enumerate() {
+                        let mut out = self;
+                        for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
                                 out[i][j] += elem;
                             }
@@ -928,8 +928,8 @@ macro_rules! matrices {
 
                     #[inline]
                     fn sub(self, rhs: $tyname) -> $tyname {
-                        let mut out = self.0;
-                        for (i, row) in rhs.0.iter().enumerate() {
+                        let mut out = self;
+                        for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
                                 out[i][j] -= elem;
                             }
@@ -942,7 +942,7 @@ macro_rules! matrices {
                 impl SubAssign for $tyname {
                     #[inline]
                     fn sub_assign(&mut self, rhs: $tyname) {
-                        for (i, row) in rhs.0.iter().enumerate() {
+                        for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
                                 self[i][j] -= elem;
                             }
@@ -956,7 +956,7 @@ macro_rules! matrices {
 
                     #[inline]
                     fn mul(self, rhs: $scalar) -> $tyname {
-                        let mut out = self.0;
+                        let mut out = self;
                         for row in out.iter_mut() {
                             for elem in row.iter_mut() {
                                 *elem *= rhs;
@@ -972,7 +972,7 @@ macro_rules! matrices {
 
                     #[inline]
                     fn mul(self, rhs: $tyname) -> $tyname {
-                        let mut out = rhs.0;
+                        let mut out = rhs;
                         for row in out.iter_mut() {
                             for elem in row.iter_mut() {
                                 *elem *= self;
@@ -1000,7 +1000,7 @@ macro_rules! matrices {
 
                     #[inline]
                     fn div(self, rhs: $scalar) -> $tyname {
-                        let mut out = self.0;
+                        let mut out = self;
                         for row in out.iter_mut() {
                             for elem in row.iter_mut() {
                                 *elem /= rhs;
