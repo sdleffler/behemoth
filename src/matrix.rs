@@ -1049,8 +1049,21 @@ macro_rules! matrices {
                     type Transpose = _matrix!($cols, $rows);
 
                     #[inline]
-                    fn transpose(&self) -> _matrix!($cols, $rows) {
+                    #[cfg(not(feature = "no_special_cases"))]
+                    fn transpose(&self) -> Self::Transpose {
                         _matrix_transpose_impl!($rows, $cols, self)
+                    }
+
+                    #[inline]
+                    #[cfg(feature = "no_special_cases")]
+                    fn transpose(&self) -> Self::Transpose {
+                        let mut out = <Self::Transpose as $crate::Zero>::ZERO;
+                        for (i, row) in self.iter().enumerate() {
+                            for (j, &elem) in row.iter().enumerate() {
+                                out[j][i] = elem;
+                            }
+                        }
+                        out
                     }
                 }
             }
@@ -1059,13 +1072,48 @@ macro_rules! matrices {
                 if ($rows) == ($cols) {
                     impl $crate::traits::Square for $tyname {
                         #[inline]
+                        #[cfg(not(feature = "no_special_cases"))]
                         fn identity() -> $tyname {
                             _matrix_id_impl!($rows, $tyname, $scalar)
                         }
 
                         #[inline]
+                        #[cfg(feature = "no_special_cases")]
+                        fn identity() -> $tyname {
+                            let mut id = <$tyname as $crate::Zero>::ZERO;
+                            for i in 0..as_expr!($rows) {
+                                id[i][i] = <$scalar as $crate::One>::ONE;
+                            }
+                            id
+                        }
+
+                        #[inline]
+                        #[cfg(not(feature = "no_special_cases"))]
                         fn determinant(&self) -> $scalar {
                             _matrix_det_impl!($rows, self, $scalar)
+                        }
+
+                        #[inline]
+                        #[cfg(feature = "no_special_cases")]
+                        fn determinant(&self) -> $scalar {
+                            fn det(data: &Vec<Vec<$scalar>>) -> $scalar {
+                                if data.len() == 2 {
+                                    data[0][0] * data[1][1] - data[0][1] * data[1][0]
+                                } else {
+                                    let (top, body) = data.split_first().unwrap();
+                                    let mut minor: Vec<Vec<$scalar>>
+                                        = body.iter().map(|row| row[1..].to_vec()).collect();
+                                    let mut sum = top[0] * det(&minor);
+                                    for i in 1..top.len() {
+                                        for j in 0..body.len() {
+                                            minor[j][i-1] = body[j][i-1];
+                                        }
+                                        sum += top[i] * det(&minor) * (-((i as isize) & 1) | 1) as f64;
+                                    }
+                                    sum
+                                }
+                            }
+                            det(&self.iter().map(|row| row.to_vec()).collect())
                         }
 
                         #[inline]
