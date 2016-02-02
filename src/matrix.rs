@@ -640,8 +640,26 @@ macro_rules! _matrices_auto_mul_impls {
                     type Output = _matrix!($brows, $ccols);
 
                     #[inline]
+                    #[cfg(not(feature = "no_special_cases"))]
                     fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
                         _matrix_mul_impl!([$brows, $bcols], [$crows, $ccols] self, rhs)
+                    }
+
+                    #[inline]
+                    #[cfg(feature = "no_special_cases")]
+                    fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
+                        let mut out = <_matrix!($brows, $ccols) as $crate::Zero>::ZERO;
+
+                        for (i, row) in out.iter_mut().enumerate() {
+                            for (j, elem) in row.iter_mut().enumerate() {
+                                for (l_ik, r_kj) in self[i].iter()
+                                                           .zip(rhs.iter().map(|&row| row[j])) {
+                                    *elem += l_ik * r_kj;
+                                }
+                            }
+                        }
+
+                        out
                     }
                 }
             } else {}
@@ -739,7 +757,7 @@ macro_rules! _matrix_id_impl {
     ($order:tt, $matrix:ident, $scalar:ty) => (
         {
             let mut id = <$matrix as $crate::Zero>::ZERO;
-            for i in 0..as_expr!($order) {
+            for i in 0..$matrix::ROWS {
                 id[i][i] = <$scalar as $crate::One>::ONE;
             }
             id
@@ -884,6 +902,32 @@ macro_rules! matrices {
                 #[derive(Clone, Copy, Debug, PartialEq)]
                 pub struct $tyname ([[$scalar; $cols]; $rows]);
 
+                impl $crate::traits::Matrix for $tyname {
+                    type Scalar = $scalar;
+                    type Transpose = _matrix!($cols, $rows);
+
+                    const ROWS: usize = $rows;
+                    const COLS: usize = $cols;
+
+                    #[inline]
+                    #[cfg(not(feature = "no_special_cases"))]
+                    fn transpose(&self) -> Self::Transpose {
+                        _matrix_transpose_impl!($rows, $cols, self)
+                    }
+
+                    #[inline]
+                    #[cfg(feature = "no_special_cases")]
+                    fn transpose(&self) -> Self::Transpose {
+                        let mut out = <Self::Transpose as $crate::Zero>::ZERO;
+                        for (i, row) in self.iter().enumerate() {
+                            for (j, &elem) in row.iter().enumerate() {
+                                out[j][i] = elem;
+                            }
+                        }
+                        out
+                    }
+                }
+
                 impl Deref for $tyname {
                     type Target = [[$scalar; $cols]; $rows];
 
@@ -906,7 +950,7 @@ macro_rules! matrices {
                                 out[i][j] += elem;
                             }
                         }
-                        $tyname(out)
+                        out
                     }
                 }
 
@@ -934,7 +978,7 @@ macro_rules! matrices {
                                 out[i][j] -= elem;
                             }
                         }
-                        $tyname(out)
+                        out
                     }
                 }
 
@@ -962,7 +1006,7 @@ macro_rules! matrices {
                                 *elem *= rhs;
                             }
                         }
-                        $tyname(out)
+                        out
                     }
                 }
 
@@ -978,7 +1022,7 @@ macro_rules! matrices {
                                 *elem *= self;
                             }
                         }
-                        $tyname(out)
+                        out
                     }
                 }
 
@@ -1006,7 +1050,7 @@ macro_rules! matrices {
                                 *elem /= rhs;
                             }
                         }
-                        $tyname(out)
+                        out
                     }
                 }
 
@@ -1043,29 +1087,6 @@ macro_rules! matrices {
                         [[<$scalar as $crate::Zero>::ZERO; $cols]; $rows]
                     );
                 }
-
-                impl $crate::traits::Matrix for $tyname {
-                    type Scalar = $scalar;
-                    type Transpose = _matrix!($cols, $rows);
-
-                    #[inline]
-                    #[cfg(not(feature = "no_special_cases"))]
-                    fn transpose(&self) -> Self::Transpose {
-                        _matrix_transpose_impl!($rows, $cols, self)
-                    }
-
-                    #[inline]
-                    #[cfg(feature = "no_special_cases")]
-                    fn transpose(&self) -> Self::Transpose {
-                        let mut out = <Self::Transpose as $crate::Zero>::ZERO;
-                        for (i, row) in self.iter().enumerate() {
-                            for (j, &elem) in row.iter().enumerate() {
-                                out[j][i] = elem;
-                            }
-                        }
-                        out
-                    }
-                }
             }
 
             is_eq! {
@@ -1081,7 +1102,7 @@ macro_rules! matrices {
                         #[cfg(feature = "no_special_cases")]
                         fn identity() -> $tyname {
                             let mut id = <$tyname as $crate::Zero>::ZERO;
-                            for i in 0..as_expr!($rows) {
+                            for i in 0..$tyname::ROWS {
                                 id[i][i] = <$scalar as $crate::One>::ONE;
                             }
                             id
@@ -1122,20 +1143,10 @@ macro_rules! matrices {
                         }
                     }
 
-                    // FIXME: Special case for matrices nxm with n <= 4, m <= 4
                     impl MulAssign for $tyname {
                         #[inline]
                         fn mul_assign(&mut self, rhs: $tyname) {
-                            for row in self.iter_mut() {
-                                let mut newrow = [<$scalar as $crate::Zero>::ZERO; $cols];
-                                for j in 0..$cols {
-                                    for (l_ik, r_kj) in row.iter()
-                                                           .zip(rhs.iter().map(|&row| row[j])) {
-                                        newrow[j] += l_ik * r_kj;
-                                    }
-                                }
-                                *row = newrow;
-                            }
+                            *self = *self * rhs;
                         }
                     }
                 } else {}
