@@ -1,4 +1,6 @@
 # behemoth
+[![Build Status](https://travis-ci.org/sdleffler/behemoth.svg?branch=master)](https://travis-ci.org/sdleffler/behemoth)
+
 A horrible, demonic experiment in Rust macro abuse.
 
 Because I never stopped to ask "should I, really?" when I realized that all of my problems could be solved by the overzealous application of macros everywhere.
