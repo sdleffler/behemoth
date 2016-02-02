@@ -9,4 +9,4 @@ Oh crap! This will be horribly slow at runtime! NEVER FEAR! We'll just make 64 s
 
 The Behemoth linear algebra library promises to add up to 20 seconds on to your compile time! It features the ability to define matrix types, vector types, and more on demand - simply add another line to the appropriate macro! <sub>Regret, sorrow, and irritation are common side effects of using the Behemoth linear algebra library. If you begin to experience chest pain while using the Behemoth linear algebra library, please visit a doctor.</sub>
 
-Behemoth<sup>TM</sup> - because pain at compile-time is preferable to pain at run-time. Recommended by masochists everywhere!
+Behemoth<sup>TM</sup> - because pain at compile-time is always preferable~~ to pain at run-time~~. Recommended by masochists everywhere!
