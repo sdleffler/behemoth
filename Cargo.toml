@@ -1,0 +1,4 @@
+[package]
+name = "behemoth"
+version = "0.2.0"
+authors = ["Sean Leffler <sean@errno.com>"]
