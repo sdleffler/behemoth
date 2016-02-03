@@ -348,7 +348,7 @@ macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $($else_:ident)*) => ();
 }
 
-macro_rules! _expansion_trick {
+macro_rules! _replace {
     ($id:ident, $e:expr) => ($e)
 }
 
@@ -375,15 +375,15 @@ macro_rules! ntuple_space {
             }
         }
 
-        impl From<$name> for [$t; _sum!($(_expansion_trick!($e, 1)),*)] {
+        impl From<$name> for [$t; _sum!($(_replace!($e, 1)),*)] {
             fn from(t: $name) -> Self {
                 [ $(t.$e),* ]
             }
         }
 
-        impl From<[$t; _sum!($(_expansion_trick!($e, 1)),*)]> for $name {
+        impl From<[$t; _sum!($(_replace!($e, 1)),*)]> for $name {
             #[allow(non_upper_case_globals)]
-            fn from(arr: [$t; _sum!($(_expansion_trick!($e, 1)),*)]) -> Self {
+            fn from(arr: [$t; _sum!($(_replace!($e, 1)),*)]) -> Self {
                 _zip_fold_consts!(0usize, $($e),*);
                 $name { $($e: arr[$e]),* }
             }
