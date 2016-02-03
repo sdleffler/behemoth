@@ -1,3 +1,5 @@
+// FIXME: Needs ApproxEq and assert_approx_eq! macros.
+
 #[cfg(test)]
 mod matrix_special_cased {
     matrices! {
