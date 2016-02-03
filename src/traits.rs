@@ -23,8 +23,7 @@ pub trait Matrix: Add<Output=Self> + AddAssign
     type Scalar: Field + Mul<Self, Output=Self>;
     type Transpose: Matrix;
 
-    const ROWS: usize;
-    const COLS: usize;
+    fn dimensions(&self) -> (usize, usize);
 
     fn transpose(&self) -> Self::Transpose;
 }
