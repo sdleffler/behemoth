@@ -15,6 +15,9 @@ extern crate test;
 extern crate rand;
 
 #[macro_use]
+mod macros;
+
+#[macro_use]
 pub mod matrix;
 pub mod scalar;
 pub mod traits;

@@ -1,28 +1,3 @@
-macro_rules! as_expr {
-    ($e:expr) => ($e)
-}
-
-macro_rules! as_items {
-    ($($i:item)*) => ($($i)*)
-}
-
-macro_rules! is_eq {
-    (
-        if ($($thingA:tt)*) == ($($thingB:tt)*) {
-            $($if_true:tt)*
-        } else {
-            $($if_false:tt)*
-        }
-    ) => (
-        macro_rules! is_eq_test {
-            ($($thingA)*, $($thingA)*) => ($($if_true)*);
-            ($($thingA)*, $($thingB)*) => ($($if_false)*);
-        }
-
-        is_eq_test!($($thingA)*, $($thingB)*);
-    );
-}
-
 macro_rules! _matrix_mul_impl {
     ([1, 1], [1, 1] $lhs:ident, $rhs:ident) => (
         _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0]]])

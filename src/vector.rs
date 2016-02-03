@@ -3,14 +3,6 @@ use traits::{Cross, InnerProduct, Metric, Norm, Vector};
 
 use std::ops::{Add, Sub, Mul, Div, Neg, Index, IndexMut};
 
-macro_rules! as_expr {
-    ($x:expr) => ($x)
-}
-
-macro_rules! as_items {
-    ($($x:item)*) => ($($x)*)
-}
-
 macro_rules! _vector_binop_impl {
     ($name:ident $optrait:ident { $($it:tt)* }) => (
         as_items!(impl $optrait for $name {
