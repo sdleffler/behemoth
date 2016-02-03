@@ -591,24 +591,24 @@ macro_rules! _matrix_mul_impl {
 }
 
 macro_rules! _matrices_auto_mul_impls {
-    (@outer [$($lty:ty => $lrows:tt, $lcols:tt)*]
-        [$cty:ty => $crows:tt, $ccols:tt $($rty:ty => $rrows:tt, $rcols:tt)*]) => (
+    (@outer [$($lty:ty => $lrows:tt $lcols:tt)*]
+        [$cty:ty => $crows:tt $ccols:tt $($rty:ty => $rrows:tt $rcols:tt)*]) => (
         _matrices_auto_mul_impls! {
             @inner
-            ($cty => $crows, $ccols)
+            ($cty => $crows $ccols)
             []
-            [$($lty => $lrows, $lcols)* $cty => $crows, $ccols $($rty => $rrows, $rcols)*]
+            [$($lty => $lrows $lcols)* $cty => $crows $ccols $($rty => $rrows $rcols)*]
         }
         _matrices_auto_mul_impls! {
             @outer
-            [$($lty => $lrows, $lcols)* $cty => $crows, $ccols]
-            [$($rty => $rrows, $rcols)*]
+            [$($lty => $lrows $lcols)* $cty => $crows $ccols]
+            [$($rty => $rrows $rcols)*]
         }
     );
     (@outer $ignore:tt []) => ();
-    (@inner ($bty:ty => $brows:tt, $bcols:tt)
-        [$($lty:ty => $lrows:tt, $lcols:tt)*]
-        [$cty:ty => $crows:tt, $ccols:tt $($rty:ty => $rrows:tt, $rcols:tt)*]) => (
+    (@inner ($bty:ty => $brows:tt $bcols:tt)
+        [$($done:tt)*]
+        [$cty:ty => $crows:tt $ccols:tt $($rest:tt)*]) => (
         is_eq! {
             if ($crows) == ($bcols) {
                 impl Mul<$cty> for $bty {
@@ -641,18 +641,18 @@ macro_rules! _matrices_auto_mul_impls {
         }
         _matrices_auto_mul_impls! {
             @inner
-            ($bty => $brows, $bcols)
-            [$($lty => $lrows, $lcols)* $cty => $crows, $ccols]
-            [$($rty => $rrows, $rcols)*]
+            ($bty => $brows $bcols)
+            [$($done)* $cty => $crows $ccols]
+            [$($rest)*]
         }
     );
     (@inner $ignore:tt $empty:tt []) => ();
 
-    ($($bty:ty => $brows:tt, $bcols:tt)+) => (
+    ($($bty:ty => $brows:tt $bcols:tt)+) => (
         _matrices_auto_mul_impls! {
             @outer
             []
-            [$($bty => $brows, $bcols)+]
+            [$($bty => $brows $bcols)+]
         }
     );
 }
@@ -870,19 +870,24 @@ macro_rules! matrices {
             )+
         }
 
-        _matrices_auto_mul_impls!($($tyname => $rows, $cols)+);
+        _matrices_auto_mul_impls!($($tyname => $rows $cols)+);
 
         $(
             as_items! {
                 #[derive(Clone, Copy, Debug, PartialEq)]
                 pub struct $tyname ([[$scalar; $cols]; $rows]);
 
+                impl $tyname {
+                    const ROWS: usize = $rows;
+                    const COLS: usize = $cols;
+                }
+
                 impl $crate::traits::Matrix for $tyname {
                     type Scalar = $scalar;
                     type Transpose = _matrix!($cols, $rows);
 
-                    const ROWS: usize = $rows;
-                    const COLS: usize = $cols;
+                    #[inline]
+                    fn dimensions(&self) -> (usize, usize) { (Self::ROWS, Self::COLS) }
 
                     #[inline]
                     #[cfg(not(feature = "no_special_cases"))]
