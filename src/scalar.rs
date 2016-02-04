@@ -1,5 +1,4 @@
-use super::*;
-use traits::{Field};
+use traits::{Field, One, Zero};
 
 use std::ops::{Add, Sub, Mul, Div, Neg};
 

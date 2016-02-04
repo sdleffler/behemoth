@@ -26,29 +26,15 @@ pub mod vector;
 
 mod tests;
 
-use std::ops::{Add, Mul};
-
-/// These two traits are intended simply for holdover until std::num is
-/// stabilized.
-pub trait Zero: Sized + Add<Self, Output=Self> {
-	const ZERO: Self;
-}
-
-/// These two traits are intended simply for holdover until std::num is
-/// stabilized.
-pub trait One: Sized + Mul<Self, Output=Self> {
-	const ONE: Self;
-}
-
 macro_rules! impl_add_mul_identities {
     ($({ zero: $zero:expr, one: $one:expr, { $($t:ty)* } })*) => (
     	$(
     		$(
-    			impl Zero for $t {
+    			impl traits::Zero for $t {
     				const ZERO: $t = $zero;
     			}
 
-    			impl One for $t {
+    			impl traits::One for $t {
     				const ONE: $t = $one;
     			}
     		)*

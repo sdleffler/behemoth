@@ -1,10 +1,22 @@
-use ::{One, Zero};
-
 use std::ops::{Add, AddAssign,
                Sub, SubAssign,
                Mul, MulAssign,
                Div, DivAssign,
                Neg};
+
+
+/// These two traits are intended simply for holdover until std::num is
+/// stabilized.
+pub trait Zero: Sized + Add<Self, Output=Self> {
+	const ZERO: Self;
+}
+
+/// These two traits are intended simply for holdover until std::num is
+/// stabilized.
+pub trait One: Sized + Mul<Self, Output=Self> {
+	const ONE: Self;
+}
+
 
 pub trait Field: Add<Output=Self>
                + Sub<Output=Self>

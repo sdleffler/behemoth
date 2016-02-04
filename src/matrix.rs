@@ -574,7 +574,7 @@ macro_rules! _matrix_mul_impl {
 
     ([$lrows:tt, $lcols:tt], [$rrows:tt, $rcols:tt] $lhs:ident, $rhs:ident) => (
         {
-            let mut out = <_matrix!($lrows, $rcols) as $crate::Zero>::ZERO;
+            let mut out = <_matrix!($lrows, $rcols) as Zero>::ZERO;
 
             for (i, row) in out.iter_mut().enumerate() {
                 for (j, elem) in row.iter_mut().enumerate() {
@@ -623,7 +623,7 @@ macro_rules! _matrices_auto_mul_impls {
                     #[inline]
                     #[cfg(feature = "no_special_cases")]
                     fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
-                        let mut out = <_matrix!($brows, $ccols) as $crate::Zero>::ZERO;
+                        let mut out = <_matrix!($brows, $ccols) as Zero>::ZERO;
 
                         for (i, row) in out.iter_mut().enumerate() {
                             for (j, elem) in row.iter_mut().enumerate() {
@@ -694,46 +694,46 @@ macro_rules! _matrix_det_impl {
 
 macro_rules! _matrix_id_impl {
     (1, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as $crate::One>::ONE]])
+        $matrix([[<$scalar as One>::ONE]])
     );
     (2, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as $crate::One>::ONE, <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO, <$scalar as $crate::One>::ONE]])
+        $matrix([[<$scalar as One>::ONE, <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO, <$scalar as One>::ONE]])
     );
     (3, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as $crate::One>::ONE,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::One>::ONE,
-                  <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::One>::ONE]])
+        $matrix([[<$scalar as One>::ONE,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO,
+                  <$scalar as One>::ONE,
+                  <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as One>::ONE]])
     );
     (4, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as $crate::One>::ONE,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::One>::ONE,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::One>::ONE,
-                  <$scalar as $crate::Zero>::ZERO],
-                 [<$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::Zero>::ZERO,
-                  <$scalar as $crate::One>::ONE]])
+        $matrix([[<$scalar as One>::ONE,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO,
+                  <$scalar as One>::ONE,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as One>::ONE,
+                  <$scalar as Zero>::ZERO],
+                 [<$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as Zero>::ZERO,
+                  <$scalar as One>::ONE]])
     );
     ($order:tt, $matrix:ident, $scalar:ty) => (
         {
-            let mut id = <$matrix as $crate::Zero>::ZERO;
+            let mut id = <$matrix as Zero>::ZERO;
             for i in 0..$matrix::ROWS {
-                id[i][i] = <$scalar as $crate::One>::ONE;
+                id[i][i] = <$scalar as One>::ONE;
             }
             id
         }
@@ -837,7 +837,7 @@ macro_rules! _matrix_transpose_impl {
     );
     ($rows:tt, $cols:tt, $s:ident) => (
         {
-            let mut out = <_matrix!($cols, $rows) as $crate::Zero>::ZERO;
+            let mut out = <_matrix!($cols, $rows) as Zero>::ZERO;
             for (i, row) in $s.iter().enumerate() {
                 for (j, &elem) in row.iter().enumerate() {
                     out[j][i] = elem;
@@ -850,9 +850,9 @@ macro_rules! _matrix_transpose_impl {
 
 #[macro_export]
 macro_rules! matrices {
-    ($scalar:ty: $($tyname:ident => $rows:tt, $cols:tt)+) => (
+    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $(let $synonym:path => $dims:tt)*) => (
         #[allow(unused_imports)]
-        use $crate::traits::{Matrix, Square};
+        use $crate::traits::{Matrix, One, Square, Zero};
 
         #[allow(unused_imports)]
         use std::ops::{
@@ -871,6 +871,67 @@ macro_rules! matrices {
         }
 
         _matrices_auto_mul_impls!($($tyname => $rows $cols)+);
+
+        $(
+            as_items! {
+                impl From<$synonym> for _matrix!(1, $dims) {
+                    #[inline]
+                    fn from(vec: $synonym) -> Self {
+                        _matrix!(1, $dims)([vec.into()])
+                    }
+                }
+
+                impl From<$synonym> for _matrix!($dims, 1) {
+                    #[inline]
+                    fn from(vec: $synonym) -> Self {
+                        _matrix!($dims, 1)(vec.into())
+                    }
+                }
+
+                impl From<$synonym> for _matrix!($dims, $dims) {
+                    #[inline]
+                    fn from(vec: $synonym) -> Self {
+                        <_matrix!($dims, $dims) as From<[$scalar; $dims]>>::from(vec.into())
+                    }
+                }
+
+                impl Mul<_matrix!(1, $dims)> for $synonym {
+                    type Output = _matrix!($dims, $dims);
+
+                    #[inline]
+                    fn mul(self, rhs: _matrix!(1, $dims)) -> _matrix!($dims, $dims) {
+                        <_matrix!($dims, 1) as From<$synonym>>::from(self) * rhs
+                    }
+                }
+
+                impl Mul<_matrix!($dims, 1)> for $synonym {
+                    type Output = _matrix!(1, 1);
+
+                    #[inline]
+                    fn mul(self, rhs: _matrix!($dims, 1)) -> _matrix!(1, 1) {
+                        <_matrix!(1, $dims) as From<$synonym>>::from(self) * rhs
+                    }
+                }
+
+                impl Mul<$synonym> for _matrix!(1, $dims) {
+                    type Output = _matrix!(1, 1);
+
+                    #[inline]
+                    fn mul(self, rhs: $synonym) -> _matrix!(1, 1) {
+                        self * <_matrix!($dims, 1) as From<$synonym>>::from(rhs)
+                    }
+                }
+
+                impl Mul<$synonym> for _matrix!($dims, 1) {
+                    type Output = _matrix!($dims, $dims);
+
+                    #[inline]
+                    fn mul(self, rhs: $synonym) -> _matrix!($dims, $dims) {
+                        self * <_matrix!(1, $dims) as From<$synonym>>::from(rhs)
+                    }
+                }
+            }
+        )*
 
         $(
             as_items! {
@@ -898,7 +959,7 @@ macro_rules! matrices {
                     #[inline]
                     #[cfg(feature = "no_special_cases")]
                     fn transpose(&self) -> Self::Transpose {
-                        let mut out = <Self::Transpose as $crate::Zero>::ZERO;
+                        let mut out = <Self::Transpose as Zero>::ZERO;
                         for (i, row) in self.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
                                 out[j][i] = elem;
@@ -1062,9 +1123,9 @@ macro_rules! matrices {
                     }
                 }
 
-                impl $crate::Zero for $tyname {
+                impl Zero for $tyname {
                     const ZERO: $tyname = $tyname(
-                        [[<$scalar as $crate::Zero>::ZERO; $cols]; $rows]
+                        [[<$scalar as Zero>::ZERO; $cols]; $rows]
                     );
                 }
             }
@@ -1081,9 +1142,9 @@ macro_rules! matrices {
                         #[inline]
                         #[cfg(feature = "no_special_cases")]
                         fn identity() -> $tyname {
-                            let mut id = <$tyname as $crate::Zero>::ZERO;
+                            let mut id = <$tyname as Zero>::ZERO;
                             for i in 0..$tyname::ROWS {
-                                id[i][i] = <$scalar as $crate::One>::ONE;
+                                id[i][i] = <$scalar as One>::ONE;
                             }
                             id
                         }
@@ -1120,6 +1181,17 @@ macro_rules! matrices {
                         #[inline]
                         fn transpose_mut(&mut self) {
                             *self = self.transpose();
+                        }
+                    }
+
+                    impl From<[$scalar; $rows]> for $tyname {
+                        #[inline]
+                        fn from(diags: [$scalar; $rows]) -> Self {
+                            let mut empty = $tyname::ZERO;
+                            for i in 0..$rows {
+                                empty[i][i] = diags[i];
+                            }
+                            empty
                         }
                     }
 

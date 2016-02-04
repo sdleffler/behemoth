@@ -1,8 +1,3 @@
-use super::{Zero};
-use traits::{Cross, InnerProduct, Metric, Norm, Vector};
-
-use std::ops::{Add, Sub, Mul, Div, Neg, Index, IndexMut};
-
 macro_rules! _vector_binop_impl {
     ($name:ident $optrait:ident { $($it:tt)* }) => (
         as_items!(impl $optrait for $name {
@@ -188,6 +183,7 @@ macro_rules! _vector_structure {
         #[derive(Copy, Clone, Debug)]
         pub struct $name { $($vn: $vt),* }
 
+        #[allow(dead_code)]
         impl $name {
             pub fn new($($vn: $vt),*) -> $name {
                 $name { $($vn: $vn),* }
@@ -198,6 +194,7 @@ macro_rules! _vector_structure {
         #[derive(Copy, Clone, Debug)]
         pub struct $name ( $vt );
 
+        #[allow(dead_code)]
         impl $name {
             pub fn new($v: $vt) {
                 $name ( $v )
@@ -282,6 +279,10 @@ macro_rules! vector_space {
 
         $( $rest:tt )*
     ) => (
+        use std::ops::{Add, Sub, Mul, Div, Neg};
+
+        use $crate::traits::{Vector, Zero};
+
         _vector_structure!($name $body);
 
         impl Vector for $name {
@@ -300,6 +301,8 @@ macro_rules! _sum {
 
 macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $x:ident $y:ident) => (
+        use $crate::traits::{Cross};
+
         impl Cross for $name {
             type Perpendicular = $t;
 
@@ -327,6 +330,8 @@ macro_rules! _try_dimension_specific_op {
         }
     );
     ($name:ident $t:ty, $x:ident $y:ident $z:ident) => (
+        use $crate::traits::{Cross};
+
         impl Cross for $name {
             type Perpendicular = $name;
 
@@ -359,6 +364,8 @@ macro_rules! ntuple_space {
             $($e:ident),*
         }
     ) => (
+        use std::ops::{Index, IndexMut};
+
         vector_space! {
             $name {
                 { $($e: $t),* }
@@ -368,16 +375,34 @@ macro_rules! ntuple_space {
         }
 
         impl From<$name> for [$t; _sum!($(_replace!($e, 1)),*)] {
+            #[inline]
             fn from(t: $name) -> Self {
                 [ $(t.$e),* ]
             }
         }
 
+        impl From<$name> for [[$t; 1]; _sum!($(_replace!($e, 1)),*)] {
+            #[inline]
+            fn from(t: $name) -> Self {
+                [ $([t.$e]),* ]
+            }
+        }
+
         impl From<[$t; _sum!($(_replace!($e, 1)),*)]> for $name {
+            #[inline]
             #[allow(non_upper_case_globals)]
             fn from(arr: [$t; _sum!($(_replace!($e, 1)),*)]) -> Self {
                 _zip_fold_consts!(0usize, $($e),*);
                 $name { $($e: arr[$e]),* }
+            }
+        }
+
+        impl From<[[$t; 1]; _sum!($(_replace!($e, 1)),*)]> for $name {
+            #[inline]
+            #[allow(non_upper_case_globals)]
+            fn from(arr: [[$t; 1]; _sum!($(_replace!($e, 1)),*)]) -> Self {
+                _zip_fold_consts!(0usize, $($e),*);
+                $name { $($e: arr[$e][0]),* }
             }
         }
 
@@ -425,6 +450,8 @@ macro_rules! euclidean_space {
             }
         }
 
+        use $crate::traits::{InnerProduct, Norm, Metric};
+
         impl InnerProduct for $name {
             fn dot(self, other: $name) -> $t {
                 _sum!($(self.$e * other.$e),*)
@@ -450,23 +477,3 @@ macro_rules! euclidean_space {
         _try_dimension_specific_op!($name $t, $($e)*);
     );
 }
-
-//trace_macros!(true);
-
-// vector_space! {
-//     Vec3f {
-//         { x: f64, y: f64, z: f64 }
-
-//         Scalar = f64;
-//     }
-// }
-
-euclidean_space! {
-    Vec2f: f64 { x, y }
-}
-
-euclidean_space! {
-    Vec3f: f64 { x, y, z }
-}
-
-//trace_macros!(false);
