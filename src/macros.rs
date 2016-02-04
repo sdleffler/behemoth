@@ -34,8 +34,8 @@ macro_rules! lazy_single_instantiate {
                 lazy_single_instantiate! {
                     $name:
                     $($searched)*
-                    ($($input)*) => {}
                     $($unsearched)*
+                    ($($input)*) => {}
                 }
             } else {
                 lazy_single_instantiate! {
@@ -70,5 +70,55 @@ macro_rules! lazy_single_instantiate {
     );
     ($name:ident: $($more:tt)*) => (
         lazy_single_instantiate!(@recurse { $($more)* } {} $name $($more)*);
+    );
+}
+
+macro_rules! lazy_cycle_instantiate {
+    (@remove
+        ($($remove:tt)*) $name:ident
+        { $($searched:tt)* }
+        { ($($input:tt)*) => { $($body:tt)* } $($unsearched:tt)* }
+    ) => (
+        is_eq! {
+            if ($($remove)*) == ($($input)*) {
+                lazy_cycle_instantiate! {
+                    $name:
+                    $($searched)*
+                    $($unsearched)*
+                    ($($input)*) => { $($body)* }
+                }
+            } else {
+                lazy_cycle_instantiate! {
+                    @remove
+                    ($($remove)*)
+                    $name
+                    { $($searched)* ($($input)*) => { $($body)* } }
+                    { $($unsearched)* }
+                }
+            }
+        }
+    );
+    (@recurse $all:tt { $($build:tt)* } $name:ident ( $($input:tt)* ) => { $($body:tt)* } $($more:tt)*) => (
+        lazy_cycle_instantiate! {
+            @recurse
+            $all
+            {
+                $($build)*
+                ($($input)*) => (
+                    $($body)*
+                    lazy_cycle_instantiate!(@remove ($($input)*) $name {} $all);
+                );
+            }
+            $name
+            $($more)*
+        }
+    );
+    (@recurse $all:tt { $($build:tt)* } $name:ident) => (
+        macro_rules! $name {
+            $($build)*
+        }
+    );
+    ($name:ident: $($more:tt)*) => (
+        lazy_cycle_instantiate!(@recurse { $($more)* } {} $name $($more)*);
     );
 }
