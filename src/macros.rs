@@ -73,6 +73,21 @@ macro_rules! lazy_single_instantiate {
     );
 }
 
+macro_rules! lazy_single_use {
+    ($($macname:ident => ($($body:tt)*);)+) => (
+        $(
+            macro_rules! $macname {
+                () => (
+                    $($body)*
+                    macro_rules! $macname {
+                        () => ();
+                    }
+                );
+            }
+        )+
+    );
+}
+
 macro_rules! lazy_cycle_instantiate {
     (@remove
         ($($remove:tt)*) $name:ident

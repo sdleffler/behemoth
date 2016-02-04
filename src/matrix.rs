@@ -853,22 +853,21 @@ macro_rules! matrices {
     ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $(let $synonym:path => $dims:tt)*) => (
         _behemoth_in_wrapper_check!();
 
-        _behemoth_use!(Matrix);
-        _behemoth_use!(One);
-        _behemoth_use!(Square);
-        _behemoth_use!(Zero);
+        _use_Matrix!();
+        _use_One!();
+        _use_Zero!();
 
-        _behemoth_use!(Add);
-        _behemoth_use!(AddAssign);
-        _behemoth_use!(Sub);
-        _behemoth_use!(SubAssign);
-        _behemoth_use!(Mul);
-        _behemoth_use!(MulAssign);
-        _behemoth_use!(Div);
-        _behemoth_use!(DivAssign);
-        _behemoth_use!(Neg);
-        _behemoth_use!(Deref);
-        _behemoth_use!(DerefMut);
+        _use_Add!();
+        _use_AddAssign!();
+        _use_Sub!();
+        _use_SubAssign!();
+        _use_Mul!();
+        _use_MulAssign!();
+        _use_Div!();
+        _use_DivAssign!();
+        _use_Neg!();
+        _use_Deref!();
+        _use_DerefMut!();
 
         macro_rules! _matrix {
             $(
@@ -942,7 +941,7 @@ macro_rules! matrices {
         $(
             as_items! {
                 #[derive(Clone, Copy, Debug, PartialEq)]
-                pub struct $tyname ([[$scalar; $cols]; $rows]);
+                pub struct $tyname (pub [[$scalar; $cols]; $rows]);
 
                 impl $tyname {
                     const ROWS: usize = $rows;
@@ -1138,7 +1137,9 @@ macro_rules! matrices {
 
             is_eq! {
                 if ($rows) == ($cols) {
-                    impl $crate::traits::Square for $tyname {
+                    _use_Square!();
+
+                    impl Square for $tyname {
                         #[inline]
                         #[cfg(not(feature = "no_special_cases"))]
                         fn identity() -> $tyname {

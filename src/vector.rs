@@ -279,14 +279,14 @@ macro_rules! vector_space {
 
         $( $rest:tt )*
     ) => (
-        _behemoth_use!(Add);
-        _behemoth_use!(Sub);
-        _behemoth_use!(Mul);
-        _behemoth_use!(Div);
-        _behemoth_use!(Neg);
+        _use_Add!();
+        _use_Sub!();
+        _use_Mul!();
+        _use_Div!();
+        _use_Neg!();
 
-        _behemoth_use!(Vector);
-        _behemoth_use!(Zero);
+        _use_Vector!();
+        _use_Zero!();
 
         _vector_structure!($name $body);
 
@@ -306,7 +306,7 @@ macro_rules! _sum {
 
 macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $x:ident $y:ident) => (
-        _behemoth_use!(Cross);
+        _use_Cross!();
 
         impl Cross for $name {
             type Perpendicular = $t;
@@ -335,7 +335,7 @@ macro_rules! _try_dimension_specific_op {
         }
     );
     ($name:ident $t:ty, $x:ident $y:ident $z:ident) => (
-        _behemoth_use!(Cross);
+        _use_Cross!();
 
         impl Cross for $name {
             type Perpendicular = $name;
@@ -377,8 +377,8 @@ macro_rules! ntuple_space {
             }
         }
 
-        _behemoth_use!(Index);
-        _behemoth_use!(IndexMut);
+        _use_Index!();
+        _use_IndexMut!();
 
         impl From<$name> for [$t; _sum!($(_replace!($e, 1)),*)] {
             #[inline]
@@ -456,9 +456,9 @@ macro_rules! euclidean_space {
             }
         }
 
-        _behemoth_use!(InnerProduct);
-        _behemoth_use!(Norm);
-        _behemoth_use!(Metric);
+        _use_InnerProduct!();
+        _use_Norm!();
+        _use_Metric!();
 
         impl InnerProduct for $name {
             fn dot(self, other: $name) -> $t {

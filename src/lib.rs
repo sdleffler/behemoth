@@ -24,10 +24,8 @@ pub mod traits;
 #[macro_use]
 pub mod vector;
 
-mod tests;
-
 macro_rules! _behemoth_in_wrapper_check {
-    () => (!! "Behemoth macros must be used inside the behemoth! {} wrapper macro!");
+    () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
 }
 
 macro_rules! behemoth {
@@ -36,35 +34,34 @@ macro_rules! behemoth {
             () => ();
         }
 
-        lazy_single_instantiate! {
-            _behemoth_use:
-            (Add) => { use std::ops::Add; }
-            (AddAssign) => { use std::ops::AddAssign; }
-            (Sub) => { use std::ops::Sub; }
-            (SubAssign) => { use std::ops::SubAssign; }
-            (Mul) => { use std::ops::Mul; }
-            (MulAssign) => { use std::ops::MulAssign; }
-            (Div) => { use std::ops::Div; }
-            (DivAssign) => { use std::ops::DivAssign; }
-            (Neg) => { use std::ops::Neg; }
-            (Deref) => { use std::ops::Deref; }
-            (DerefMut) => { use std::ops::DerefMut; }
-            (Index) => { use std::ops::Index; }
-            (IndexMut) => { use std::ops::IndexMut; }
+        lazy_single_use! {
+            _use_Add => ( use std::ops::Add; );
+            _use_AddAssign => ( use std::ops::AddAssign; );
+            _use_Sub => ( use std::ops::Sub; );
+            _use_SubAssign => ( use std::ops::SubAssign; );
+            _use_Mul => ( use std::ops::Mul; );
+            _use_MulAssign => ( use std::ops::MulAssign; );
+            _use_Div => ( use std::ops::Div; );
+            _use_DivAssign => ( use std::ops::DivAssign; );
+            _use_Neg => ( use std::ops::Neg; );
+            _use_Deref => ( use std::ops::Deref; );
+            _use_DerefMut => ( use std::ops::DerefMut; );
+            _use_Index => ( use std::ops::Index; );
+            _use_IndexMut => ( use std::ops::IndexMut; );
 
-            (One) => { use $crate::traits::One; }
-            (Zero) => { use $crate::traits::Zero; }
+            _use_One => ( use $crate::traits::One; );
+            _use_Zero => ( use $crate::traits::Zero; );
 
-            (Field) => { use $crate::traits::Field; }
+            _use_Field => ( use $crate::traits::Field; );
 
-            (Matrix) => { use $crate::traits::Matrix; }
-            (Square) => { use $crate::traits::Square; }
+            _use_Matrix => ( use $crate::traits::Matrix; );
+            _use_Square => ( use $crate::traits::Square; );
 
-            (Vector) => { use $crate::traits::Vector; }
-            (Cross) => { use $crate::traits::Cross; }
-            (InnerProduct) => { use $crate::traits::InnerProduct; }
-            (Metric) => { use $crate::traits::Metric; }
-            (Norm) => { use $crate::traits::Norm; }
+            _use_Vector => ( use $crate::traits::Vector; );
+            _use_Cross => ( use $crate::traits::Cross; );
+            _use_InnerProduct => ( use $crate::traits::InnerProduct; );
+            _use_Metric => ( use $crate::traits::Metric; );
+            _use_Norm => ( use $crate::traits::Norm; );
         }
 
         mod __behemoth {
@@ -72,10 +69,13 @@ macro_rules! behemoth {
                 $($stuff)*
             }
         }
-        pub use __behemoth::*;
+        pub use self::__behemoth::*;
 
         macro_rules! _behemoth_in_wrapper_check {
-            () => (!! "Behemoth macros must be used inside the behemoth! {} wrapper macro!");
+            () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
         }
     );
 }
+
+#[cfg(test)]
+mod tests;

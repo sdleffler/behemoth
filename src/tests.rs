@@ -2,27 +2,31 @@
 
 #[cfg(test)]
 mod matrix_special_cased {
-    matrices! {
-        f64:
-        {
-            Mat1x1 => 1, 1
-            Mat1x2 => 1, 2
-            Mat1x3 => 1, 3
-            Mat1x4 => 1, 4
-            Mat2x1 => 2, 1
-            Mat2x2 => 2, 2
-            Mat2x3 => 2, 3
-            Mat2x4 => 2, 4
-            Mat3x1 => 3, 1
-            Mat3x2 => 3, 2
-            Mat3x3 => 3, 3
-            Mat3x4 => 3, 4
-            Mat4x1 => 4, 1
-            Mat4x2 => 4, 2
-            Mat4x3 => 4, 3
-            Mat4x4 => 4, 4
+    behemoth! {
+        matrices! {
+            f64:
+            {
+                Mat1x1 => 1, 1
+                Mat1x2 => 1, 2
+                Mat1x3 => 1, 3
+                Mat1x4 => 1, 4
+                Mat2x1 => 2, 1
+                Mat2x2 => 2, 2
+                Mat2x3 => 2, 3
+                Mat2x4 => 2, 4
+                Mat3x1 => 3, 1
+                Mat3x2 => 3, 2
+                Mat3x3 => 3, 3
+                Mat3x4 => 3, 4
+                Mat4x1 => 4, 1
+                Mat4x2 => 4, 2
+                Mat4x3 => 4, 3
+                Mat4x4 => 4, 4
+            }
         }
     }
+
+    use traits::{Matrix, Square};
 
     #[test]
     fn mul_special_cased() {
@@ -170,16 +174,20 @@ mod matrix_special_cased {
 
 #[cfg(test)]
 mod matrix_general_case {
-    matrices! {
-        f64:
-        {
-            Mat5x5 => 5, 5
-            Mat5x8 => 5, 8
-            Mat6x6 => 6, 6
-            Mat8x5 => 8, 5
-            Mat8x8 => 8, 8
+    behemoth! {
+        matrices! {
+            f64:
+            {
+                Mat5x5 => 5, 5
+                Mat5x8 => 5, 8
+                Mat6x6 => 6, 6
+                Mat8x5 => 8, 5
+                Mat8x8 => 8, 8
+            }
         }
     }
+
+    use traits::Square;
 
     #[test]
     fn mul_general_case() {
@@ -221,13 +229,11 @@ mod matrix_general_case {
 
 #[cfg(test)]
 mod matrix_vector_synonyms {
-    mod vec {
+    behemoth! {
         euclidean_space! {
             Vec2f: f64 { x, y }
         }
-    }
 
-    mod mat {
         matrices! {
             f64:
             {
@@ -237,7 +243,7 @@ mod matrix_vector_synonyms {
                 Mat2x2 => 2, 2
             }
 
-            let super::vec::Vec2f => 2
+            let Vec2f => 2
         }
     }
 }
