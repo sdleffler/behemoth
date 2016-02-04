@@ -26,23 +26,56 @@ pub mod vector;
 
 mod tests;
 
-macro_rules! impl_add_mul_identities {
-    ($({ zero: $zero:expr, one: $one:expr, { $($t:ty)* } })*) => (
-    	$(
-    		$(
-    			impl traits::Zero for $t {
-    				const ZERO: $t = $zero;
-    			}
-
-    			impl traits::One for $t {
-    				const ONE: $t = $one;
-    			}
-    		)*
-    	)*
-    )
+macro_rules! _behemoth_in_wrapper_check {
+    () => (!! "Behemoth macros must be used inside the behemoth! {} wrapper macro!");
 }
 
-impl_add_mul_identities! {
-	{ zero: 0, one: 1, { u8 u16 u32 u64 usize i8 i16 i32 i64 isize } }
-	{ zero: 0.0, one: 1.0, { f32 f64 } }
+macro_rules! behemoth {
+    ($($stuff:tt)*) => (
+        macro_rules! _behemoth_in_wrapper_check {
+            () => ();
+        }
+
+        lazy_single_instantiate! {
+            _behemoth_use:
+            (Add) => { use std::ops::Add; }
+            (AddAssign) => { use std::ops::AddAssign; }
+            (Sub) => { use std::ops::Sub; }
+            (SubAssign) => { use std::ops::SubAssign; }
+            (Mul) => { use std::ops::Mul; }
+            (MulAssign) => { use std::ops::MulAssign; }
+            (Div) => { use std::ops::Div; }
+            (DivAssign) => { use std::ops::DivAssign; }
+            (Neg) => { use std::ops::Neg; }
+            (Deref) => { use std::ops::Deref; }
+            (DerefMut) => { use std::ops::DerefMut; }
+            (Index) => { use std::ops::Index; }
+            (IndexMut) => { use std::ops::IndexMut; }
+
+            (One) => { use $crate::traits::One; }
+            (Zero) => { use $crate::traits::Zero; }
+
+            (Field) => { use $crate::traits::Field; }
+
+            (Matrix) => { use $crate::traits::Matrix; }
+            (Square) => { use $crate::traits::Square; }
+
+            (Vector) => { use $crate::traits::Vector; }
+            (Cross) => { use $crate::traits::Cross; }
+            (InnerProduct) => { use $crate::traits::InnerProduct; }
+            (Metric) => { use $crate::traits::Metric; }
+            (Norm) => { use $crate::traits::Norm; }
+        }
+
+        mod __behemoth {
+            as_items! {
+                $($stuff)*
+            }
+        }
+        pub use __behemoth::*;
+
+        macro_rules! _behemoth_in_wrapper_check {
+            () => (!! "Behemoth macros must be used inside the behemoth! {} wrapper macro!");
+        }
+    );
 }

@@ -851,18 +851,24 @@ macro_rules! _matrix_transpose_impl {
 #[macro_export]
 macro_rules! matrices {
     ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $(let $synonym:path => $dims:tt)*) => (
-        #[allow(unused_imports)]
-        use $crate::traits::{Matrix, One, Square, Zero};
+        _behemoth_in_wrapper_check!();
 
-        #[allow(unused_imports)]
-        use std::ops::{
-            Add, AddAssign,
-            Sub, SubAssign,
-            Mul, MulAssign,
-            Div, DivAssign,
-            Neg,
-            Deref, DerefMut
-        };
+        _behemoth_use!(Matrix);
+        _behemoth_use!(One);
+        _behemoth_use!(Square);
+        _behemoth_use!(Zero);
+
+        _behemoth_use!(Add);
+        _behemoth_use!(AddAssign);
+        _behemoth_use!(Sub);
+        _behemoth_use!(SubAssign);
+        _behemoth_use!(Mul);
+        _behemoth_use!(MulAssign);
+        _behemoth_use!(Div);
+        _behemoth_use!(DivAssign);
+        _behemoth_use!(Neg);
+        _behemoth_use!(Deref);
+        _behemoth_use!(DerefMut);
 
         macro_rules! _matrix {
             $(

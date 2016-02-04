@@ -279,9 +279,14 @@ macro_rules! vector_space {
 
         $( $rest:tt )*
     ) => (
-        use std::ops::{Add, Sub, Mul, Div, Neg};
+        _behemoth_use!(Add);
+        _behemoth_use!(Sub);
+        _behemoth_use!(Mul);
+        _behemoth_use!(Div);
+        _behemoth_use!(Neg);
 
-        use $crate::traits::{Vector, Zero};
+        _behemoth_use!(Vector);
+        _behemoth_use!(Zero);
 
         _vector_structure!($name $body);
 
@@ -301,7 +306,7 @@ macro_rules! _sum {
 
 macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $x:ident $y:ident) => (
-        use $crate::traits::{Cross};
+        _behemoth_use!(Cross);
 
         impl Cross for $name {
             type Perpendicular = $t;
@@ -330,7 +335,7 @@ macro_rules! _try_dimension_specific_op {
         }
     );
     ($name:ident $t:ty, $x:ident $y:ident $z:ident) => (
-        use $crate::traits::{Cross};
+        _behemoth_use!(Cross);
 
         impl Cross for $name {
             type Perpendicular = $name;
@@ -364,8 +369,6 @@ macro_rules! ntuple_space {
             $($e:ident),*
         }
     ) => (
-        use std::ops::{Index, IndexMut};
-
         vector_space! {
             $name {
                 { $($e: $t),* }
@@ -373,6 +376,9 @@ macro_rules! ntuple_space {
                 Scalar = $t;
             }
         }
+
+        _behemoth_use!(Index);
+        _behemoth_use!(IndexMut);
 
         impl From<$name> for [$t; _sum!($(_replace!($e, 1)),*)] {
             #[inline]
@@ -450,7 +456,9 @@ macro_rules! euclidean_space {
             }
         }
 
-        use $crate::traits::{InnerProduct, Norm, Metric};
+        _behemoth_use!(InnerProduct);
+        _behemoth_use!(Norm);
+        _behemoth_use!(Metric);
 
         impl InnerProduct for $name {
             fn dot(self, other: $name) -> $t {
