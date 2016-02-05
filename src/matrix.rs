@@ -1,3 +1,4 @@
+#[macro_export]
 macro_rules! _matrix_mul_impl {
     ([1, 1], [1, 1] $lhs:ident, $rhs:ident) => (
         _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0]]])
@@ -590,6 +591,7 @@ macro_rules! _matrix_mul_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _matrices_auto_mul_impls {
     (@outer [$($lty:ty => $lrows:tt $lcols:tt)*]
         [$cty:ty => $crows:tt $ccols:tt $($rty:ty => $rrows:tt $rcols:tt)*]) => (
@@ -657,6 +659,7 @@ macro_rules! _matrices_auto_mul_impls {
     );
 }
 
+#[macro_export]
 macro_rules! _matrix_det_impl {
     (1, $s:ident, $scalar:ty) => (
         $s[0][0]
@@ -692,6 +695,7 @@ macro_rules! _matrix_det_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _matrix_id_impl {
     (1, $matrix:ident, $scalar:ty) => (
         $matrix([[<$scalar as One>::ONE]])
@@ -740,6 +744,7 @@ macro_rules! _matrix_id_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _matrix_transpose_impl {
     (1, 1, $s:ident) => (
         _matrix!(1, 1)([[$s[0][0]]])

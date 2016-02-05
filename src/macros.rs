@@ -1,11 +1,14 @@
+#[macro_export]
 macro_rules! as_expr {
     ($x:expr) => ($x)
 }
 
+#[macro_export]
 macro_rules! as_items {
     ($($x:item)*) => ($($x)*)
 }
 
+#[macro_export]
 macro_rules! is_eq {
     (
         if ($($thingA:tt)*) == ($($thingB:tt)*) {
@@ -73,6 +76,7 @@ macro_rules! lazy_single_instantiate {
     );
 }
 
+#[macro_export]
 macro_rules! lazy_single_use {
     ($($macname:ident => ($($body:tt)*);)+) => (
         $(

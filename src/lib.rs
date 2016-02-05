@@ -28,6 +28,7 @@ macro_rules! _behemoth_in_wrapper_check {
     () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
 }
 
+#[macro_export]
 macro_rules! behemoth {
     ($($stuff:tt)*) => (
         macro_rules! _behemoth_in_wrapper_check {
@@ -76,6 +77,3 @@ macro_rules! behemoth {
         }
     );
 }
-
-#[cfg(test)]
-mod tests;
