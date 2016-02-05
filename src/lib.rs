@@ -14,17 +14,17 @@ extern crate test;
 #[cfg(any(feature = "matrix_rand", feature = "vector_rand"))]
 extern crate rand;
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
-#[macro_use]
-pub mod matrix;
+#[macro_use] pub mod matrix;
+#[macro_use] pub mod vector;
+
 pub mod scalar;
-pub mod traits;
-#[macro_use]
-pub mod vector;
 
+mod traits;
 pub use traits::*;
+
+pub struct BlackHole<T>(T); // Swallow anything whole.
 
 macro_rules! _behemoth_in_wrapper_check {
     () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
@@ -52,19 +52,21 @@ macro_rules! behemoth {
             _use_Index => ( use std::ops::Index; );
             _use_IndexMut => ( use std::ops::IndexMut; );
 
-            _use_One => ( use $crate::traits::One; );
-            _use_Zero => ( use $crate::traits::Zero; );
+            _use_BlackHole => ( use $crate::BlackHole; );
 
-            _use_Field => ( use $crate::traits::Field; );
+            _use_One => ( use $crate::One; );
+            _use_Zero => ( use $crate::Zero; );
 
-            _use_Matrix => ( use $crate::traits::Matrix; );
-            _use_Square => ( use $crate::traits::Square; );
+            _use_Field => ( use $crate::Field; );
 
-            _use_Vector => ( use $crate::traits::Vector; );
-            _use_Cross => ( use $crate::traits::Cross; );
-            _use_InnerProduct => ( use $crate::traits::InnerProduct; );
-            _use_Metric => ( use $crate::traits::Metric; );
-            _use_Norm => ( use $crate::traits::Norm; );
+            _use_Matrix => ( use $crate::Matrix; );
+            _use_Square => ( use $crate::Square; );
+
+            _use_Vector => ( use $crate::Vector; );
+            _use_Cross => ( use $crate::Cross; );
+            _use_InnerProduct => ( use $crate::InnerProduct; );
+            _use_Metric => ( use $crate::Metric; );
+            _use_Norm => ( use $crate::Norm; );
         }
 
         mod __behemoth {

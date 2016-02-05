@@ -1,117 +1,117 @@
 #[macro_export]
 macro_rules! _matrix_mul_impl {
-    ([1, 1], [1, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0]]])
+    ([1, 1], [1, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0]]])
     );
-    ([1, 1], [1, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 2)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]]])
+    ([1, 1], [1, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]]])
     );
-    ([1, 1], [1, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 3)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]]])
+    ([1, 1], [1, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]]])
     );
-    ([1, 1], [1, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 4)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1],
+    ([1, 1], [1, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1],
                          $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]]])
     );
-    ([2, 1], [1, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 1)([[$lhs[0][0]*$rhs[0][0]],
+    ([2, 1], [1, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0]],
                         [$lhs[1][0]*$rhs[0][0]]])
     );
-    ([2, 1], [1, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 2)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
+    ([2, 1], [1, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1]]])
     );
-    ([2, 1], [1, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 3)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
+    ([2, 1], [1, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2]]])
     );
-    ([2, 1], [1, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 4)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
+    ([2, 1], [1, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2], $lhs[1][0]*$rhs[0][3]]])
     );
-    ([3, 1], [1, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 1)([[$lhs[0][0]*$rhs[0][0]],
+    ([3, 1], [1, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0]],
                         [$lhs[1][0]*$rhs[0][0]],
                         [$lhs[2][0]*$rhs[0][0]]])
     );
-    ([3, 1], [1, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 2)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
+    ([3, 1], [1, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1]]])
     );
-    ([3, 1], [1, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 3)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
+    ([3, 1], [1, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1], $lhs[2][0]*$rhs[0][2]]])
     );
-    ([3, 1], [1, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 4)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
+    ([3, 1], [1, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2], $lhs[1][0]*$rhs[0][3]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1], $lhs[2][0]*$rhs[0][2], $lhs[2][0]*$rhs[0][3]]])
     );
-    ([4, 1], [1, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 1)([[$lhs[0][0]*$rhs[0][0]],
+    ([4, 1], [1, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0]],
                         [$lhs[1][0]*$rhs[0][0]],
                         [$lhs[2][0]*$rhs[0][0]],
                         [$lhs[3][0]*$rhs[0][0]]])
     );
-    ([4, 1], [1, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 2)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
+    ([4, 1], [1, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1]],
                         [$lhs[3][0]*$rhs[0][0], $lhs[3][0]*$rhs[0][1]]])
     );
-    ([4, 1], [1, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 3)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
+    ([4, 1], [1, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1], $lhs[2][0]*$rhs[0][2]],
                         [$lhs[3][0]*$rhs[0][0], $lhs[3][0]*$rhs[0][1], $lhs[3][0]*$rhs[0][2]]])
     );
-    ([4, 1], [1, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 4)([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
+    ([4, 1], [1, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0], $lhs[0][0]*$rhs[0][1], $lhs[0][0]*$rhs[0][2], $lhs[0][0]*$rhs[0][3]],
                         [$lhs[1][0]*$rhs[0][0], $lhs[1][0]*$rhs[0][1], $lhs[1][0]*$rhs[0][2], $lhs[1][0]*$rhs[0][3]],
                         [$lhs[2][0]*$rhs[0][0], $lhs[2][0]*$rhs[0][1], $lhs[2][0]*$rhs[0][2], $lhs[2][0]*$rhs[0][3]],
                         [$lhs[3][0]*$rhs[0][0], $lhs[3][0]*$rhs[0][1], $lhs[3][0]*$rhs[0][2], $lhs[3][0]*$rhs[0][3]]])
     );
 
-    ([1, 2], [2, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]]])
+    ([1, 2], [2, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]]])
     );
-    ([1, 2], [2, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([1, 2], [2, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]]])
     );
-    ([1, 2], [2, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([1, 2], [2, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]]])
     );
-    ([1, 2], [2, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([1, 2], [2, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3]]])
     );
-    ([2, 2], [2, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
+    ([2, 2], [2, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0]]])
     );
-    ([2, 2], [2, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([2, 2], [2, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1]]])
     );
-    ([2, 2], [2, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([2, 2], [2, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1],
                          $lhs[1][0]*$rhs[0][2] + $lhs[1][1]*$rhs[1][2]]])
     );
-    ([2, 2], [2, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([2, 2], [2, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3]],
@@ -120,21 +120,21 @@ macro_rules! _matrix_mul_impl {
                          $lhs[1][0]*$rhs[0][2] + $lhs[1][1]*$rhs[1][2],
                          $lhs[1][0]*$rhs[0][3] + $lhs[1][1]*$rhs[1][3]]])
     );
-    ([3, 2], [2, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
+    ([3, 2], [2, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0]]])
     );
-    ([3, 2], [2, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([3, 2], [2, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0],
                          $lhs[2][0]*$rhs[0][1] + $lhs[2][1]*$rhs[1][1]]])
     );
-    ([3, 2], [2, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([3, 2], [2, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
@@ -144,8 +144,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][1] + $lhs[2][1]*$rhs[1][1],
                          $lhs[2][0]*$rhs[0][2] + $lhs[2][1]*$rhs[1][2]]])
     );
-    ([3, 2], [2, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([3, 2], [2, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3]],
@@ -158,14 +158,14 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][2] + $lhs[2][1]*$rhs[1][2],
                          $lhs[2][0]*$rhs[0][3] + $lhs[2][1]*$rhs[1][3]]])
     );
-    ([4, 2], [2, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
+    ([4, 2], [2, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0]],
                         [$lhs[3][0]*$rhs[0][0] + $lhs[3][1]*$rhs[1][0]]])
     );
-    ([4, 2], [2, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([4, 2], [2, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1]],
@@ -174,8 +174,8 @@ macro_rules! _matrix_mul_impl {
                         [$lhs[3][0]*$rhs[0][0] + $lhs[3][1]*$rhs[1][0],
                          $lhs[3][0]*$rhs[0][1] + $lhs[3][1]*$rhs[1][1]]])
     );
-    ([4, 2], [2, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([4, 2], [2, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0],
@@ -188,8 +188,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][1] + $lhs[3][1]*$rhs[1][1],
                          $lhs[3][0]*$rhs[0][2] + $lhs[3][1]*$rhs[1][2]]])
     );
-    ([4, 2], [2, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
+    ([4, 2], [2, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3]],
@@ -207,44 +207,44 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][3] + $lhs[3][1]*$rhs[1][3]]])
     );
 
-    ([1, 3], [3, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]]])
+    ([1, 3], [3, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]]])
     );
-    ([1, 3], [3, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([1, 3], [3, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1]]])
     );
-    ([1, 3], [3, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]+ $lhs[0][2]*$rhs[2][0],
+    ([1, 3], [3, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]+ $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]+ $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]+ $lhs[0][2]*$rhs[2][2]]])
     );
-    ([1, 3], [3, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([1, 3], [3, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3] + $lhs[0][2]*$rhs[2][3]]])
     );
-    ([2, 3], [3, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
+    ([2, 3], [3, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0]]])
     );
-    ([2, 3], [3, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([2, 3], [3, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1] + $lhs[1][2]*$rhs[2][1]]])
     );
-    ([2, 3], [3, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]+ $lhs[0][2]*$rhs[2][0],
+    ([2, 3], [3, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0]+ $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1]+ $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2]+ $lhs[0][2]*$rhs[2][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0]+ $lhs[1][2]*$rhs[2][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1]+ $lhs[1][2]*$rhs[2][1],
                          $lhs[1][0]*$rhs[0][2] + $lhs[1][1]*$rhs[1][2]+ $lhs[1][2]*$rhs[2][2]]])
     );
-    ([2, 3], [3, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([2, 3], [3, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3] + $lhs[0][2]*$rhs[2][3]],
@@ -253,21 +253,21 @@ macro_rules! _matrix_mul_impl {
                          $lhs[1][0]*$rhs[0][2] + $lhs[1][1]*$rhs[1][2] + $lhs[1][2]*$rhs[2][2],
                          $lhs[1][0]*$rhs[0][3] + $lhs[1][1]*$rhs[1][3] + $lhs[1][2]*$rhs[2][3]]])
     );
-    ([3, 3], [3, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
+    ([3, 3], [3, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0] + $lhs[2][2]*$rhs[2][0]]])
     );
-    ([3, 3], [3, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([3, 3], [3, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1] + $lhs[1][2]*$rhs[2][1]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0] + $lhs[2][2]*$rhs[2][0],
                          $lhs[2][0]*$rhs[0][1] + $lhs[2][1]*$rhs[1][1] + $lhs[2][2]*$rhs[2][1]]])
     );
-    ([3, 3], [3, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([3, 3], [3, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0],
@@ -277,8 +277,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][1] + $lhs[2][1]*$rhs[1][1] + $lhs[2][2]*$rhs[2][1],
                          $lhs[2][0]*$rhs[0][2] + $lhs[2][1]*$rhs[1][2] + $lhs[2][2]*$rhs[2][2]]])
     );
-    ([3, 3], [3, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([3, 3], [3, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3] + $lhs[0][2]*$rhs[2][3]],
@@ -291,14 +291,14 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][2] + $lhs[2][1]*$rhs[1][2] + $lhs[2][2]*$rhs[2][2],
                          $lhs[2][0]*$rhs[0][3] + $lhs[2][1]*$rhs[1][3] + $lhs[2][2]*$rhs[2][3]]])
     );
-    ([4, 3], [3, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
+    ([4, 3], [3, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0] + $lhs[2][2]*$rhs[2][0]],
                         [$lhs[3][0]*$rhs[0][0] + $lhs[3][1]*$rhs[1][0] + $lhs[3][2]*$rhs[2][0]]])
     );
-    ([4, 3], [3, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([4, 3], [3, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0],
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1] + $lhs[1][2]*$rhs[2][1]],
@@ -307,8 +307,8 @@ macro_rules! _matrix_mul_impl {
                         [$lhs[3][0]*$rhs[0][0] + $lhs[3][1]*$rhs[1][0] + $lhs[3][2]*$rhs[2][0],
                          $lhs[3][0]*$rhs[0][1] + $lhs[3][1]*$rhs[1][1] + $lhs[3][2]*$rhs[2][1]]])
     );
-    ([4, 3], [3, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([4, 3], [3, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0],
@@ -321,8 +321,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][1] + $lhs[3][1]*$rhs[1][1] + $lhs[3][2]*$rhs[2][1],
                          $lhs[3][0]*$rhs[0][2] + $lhs[3][1]*$rhs[1][2] + $lhs[3][2]*$rhs[2][2]]])
     );
-    ([4, 3], [3, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
+    ([4, 3], [3, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2],
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3] + $lhs[0][2]*$rhs[2][3]],
@@ -340,26 +340,26 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][3] + $lhs[3][1]*$rhs[1][3] + $lhs[3][2]*$rhs[2][3]]])
     );
 
-    ([1, 4], [4, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([1, 4], [4, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0]]])
     );
-    ([1, 4], [4, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([1, 4], [4, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1]]])
     );
-    ([1, 4], [4, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([1, 4], [4, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
                          $lhs[0][0]*$rhs[0][2] + $lhs[0][1]*$rhs[1][2] + $lhs[0][2]*$rhs[2][2] +
                             $lhs[0][3]*$rhs[3][2]]])
     );
-    ([1, 4], [4, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(1, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([1, 4], [4, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -368,14 +368,14 @@ macro_rules! _matrix_mul_impl {
                          $lhs[0][0]*$rhs[0][3] + $lhs[0][1]*$rhs[1][3] + $lhs[0][2]*$rhs[2][3] +
                             $lhs[0][3]*$rhs[3][3]]])
     );
-    ([2, 4], [4, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([2, 4], [4, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0] +
                             $lhs[1][3]*$rhs[3][0]]])
     );
-    ([2, 4], [4, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([2, 4], [4, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1]],
@@ -384,8 +384,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[1][0]*$rhs[0][1] + $lhs[1][1]*$rhs[1][1] + $lhs[1][2]*$rhs[2][1] +
                             $lhs[1][3]*$rhs[3][1]]])
     );
-    ([2, 4], [4, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([2, 4], [4, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -398,8 +398,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[1][0]*$rhs[0][2] + $lhs[1][1]*$rhs[1][2] + $lhs[1][2]*$rhs[2][2] +
                             $lhs[1][3]*$rhs[3][2]]])
     );
-    ([2, 4], [4, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(2, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([2, 4], [4, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -416,16 +416,16 @@ macro_rules! _matrix_mul_impl {
                          $lhs[1][0]*$rhs[0][3] + $lhs[1][1]*$rhs[1][3] + $lhs[1][2]*$rhs[2][3] +
                             $lhs[1][3]*$rhs[3][3]]])
     );
-    ([3, 4], [4, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([3, 4], [4, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0] +
                             $lhs[1][3]*$rhs[3][0]],
                         [$lhs[2][0]*$rhs[0][0] + $lhs[2][1]*$rhs[1][0] + $lhs[2][2]*$rhs[2][0] +
                             $lhs[2][3]*$rhs[3][0]]])
     );
-    ([3, 4], [4, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([3, 4], [4, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1]],
@@ -438,8 +438,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][1] + $lhs[2][1]*$rhs[1][1] + $lhs[2][2]*$rhs[2][1] +
                             $lhs[2][3]*$rhs[3][1]]])
     );
-    ([3, 4], [4, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([3, 4], [4, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -458,8 +458,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][2] + $lhs[2][1]*$rhs[1][2] + $lhs[2][2]*$rhs[2][2] +
                             $lhs[2][3]*$rhs[3][2]]])
     );
-    ([3, 4], [4, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(3, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([3, 4], [4, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -484,8 +484,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[2][0]*$rhs[0][3] + $lhs[2][1]*$rhs[1][3] + $lhs[2][2]*$rhs[2][3] +
                             $lhs[2][3]*$rhs[3][3]]])
     );
-    ([4, 4], [4, 1] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 1)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([4, 4], [4, 1] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0]],
                         [$lhs[1][0]*$rhs[0][0] + $lhs[1][1]*$rhs[1][0] + $lhs[1][2]*$rhs[2][0] +
                             $lhs[1][3]*$rhs[3][0]],
@@ -494,8 +494,8 @@ macro_rules! _matrix_mul_impl {
                         [$lhs[3][0]*$rhs[0][0] + $lhs[3][1]*$rhs[1][0] + $lhs[3][2]*$rhs[2][0] +
                             $lhs[3][3]*$rhs[3][0]]])
     );
-    ([4, 4], [4, 2] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 2)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([4, 4], [4, 2] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1]],
@@ -512,8 +512,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][1] + $lhs[3][1]*$rhs[1][1] + $lhs[3][2]*$rhs[2][1] +
                             $lhs[3][3]*$rhs[3][1]]])
     );
-    ([4, 4], [4, 3] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 3)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([4, 4], [4, 3] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -538,8 +538,8 @@ macro_rules! _matrix_mul_impl {
                          $lhs[3][0]*$rhs[0][2] + $lhs[3][1]*$rhs[1][2] + $lhs[3][2]*$rhs[2][2] +
                             $lhs[3][3]*$rhs[3][2]]])
     );
-    ([4, 4], [4, 4] $lhs:ident, $rhs:ident) => (
-        _matrix!(4, 4)([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
+    ([4, 4], [4, 4] $lhs:ident, $rhs:ident, $scalar:ty) => (
+        ([[$lhs[0][0]*$rhs[0][0] + $lhs[0][1]*$rhs[1][0] + $lhs[0][2]*$rhs[2][0] +
                             $lhs[0][3]*$rhs[3][0],
                          $lhs[0][0]*$rhs[0][1] + $lhs[0][1]*$rhs[1][1] + $lhs[0][2]*$rhs[2][1] +
                             $lhs[0][3]*$rhs[3][1],
@@ -573,9 +573,9 @@ macro_rules! _matrix_mul_impl {
                             $lhs[3][3]*$rhs[3][3]]])
     );
 
-    ([$lrows:tt, $lcols:tt], [$rrows:tt, $rcols:tt] $lhs:ident, $rhs:ident) => (
+    ([$lrows:tt, $lcols:tt], [$rrows:tt, $rcols:tt] $lhs:ident, $rhs:ident, $scalar:ty) => (
         {
-            let mut out = <_matrix!($lrows, $rcols) as Zero>::ZERO;
+            let mut out = as_expr!([[<$scalar as Zero>::ZERO; $rcols]; $lrows]);
 
             for (i, row) in out.iter_mut().enumerate() {
                 for (j, elem) in row.iter_mut().enumerate() {
@@ -593,22 +593,24 @@ macro_rules! _matrix_mul_impl {
 
 #[macro_export]
 macro_rules! _matrices_auto_mul_impls {
-    (@outer [$($lty:ty => $lrows:tt $lcols:tt)*]
+    (@outer $scalar:ty: [$($lty:ty => $lrows:tt $lcols:tt)*]
         [$cty:ty => $crows:tt $ccols:tt $($rty:ty => $rrows:tt $rcols:tt)*]) => (
         _matrices_auto_mul_impls! {
             @inner
+            $scalar:
             ($cty => $crows $ccols)
             []
             [$($lty => $lrows $lcols)* $cty => $crows $ccols $($rty => $rrows $rcols)*]
         }
         _matrices_auto_mul_impls! {
             @outer
+            $scalar:
             [$($lty => $lrows $lcols)* $cty => $crows $ccols]
             [$($rty => $rrows $rcols)*]
         }
     );
-    (@outer $ignore:tt []) => ();
-    (@inner ($bty:ty => $brows:tt $bcols:tt)
+    (@outer $scalar:ty: $ignore:tt []) => ();
+    (@inner $scalar:ty: ($bty:ty => $brows:tt $bcols:tt)
         [$($done:tt)*]
         [$cty:ty => $crows:tt $ccols:tt $($rest:tt)*]) => (
         is_eq! {
@@ -619,7 +621,7 @@ macro_rules! _matrices_auto_mul_impls {
                     #[inline]
                     #[cfg(not(feature = "no_special_cases"))]
                     fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
-                        _matrix_mul_impl!([$brows, $bcols], [$crows, $ccols] self, rhs)
+                        _matrix!($brows, $ccols)(_matrix_mul_impl!([$brows, $bcols], [$crows, $ccols] self, rhs, $scalar))
                     }
 
                     #[inline]
@@ -643,16 +645,18 @@ macro_rules! _matrices_auto_mul_impls {
         }
         _matrices_auto_mul_impls! {
             @inner
+            $scalar:
             ($bty => $brows $bcols)
             [$($done)* $cty => $crows $ccols]
             [$($rest)*]
         }
     );
-    (@inner $ignore:tt $empty:tt []) => ();
+    (@inner $scalar:ty: $ignore:tt $empty:tt []) => ();
 
-    ($($bty:ty => $brows:tt $bcols:tt)+) => (
+    ($scalar:ty: $($bty:ty => $brows:tt $bcols:tt)+) => (
         _matrices_auto_mul_impls! {
             @outer
+            $scalar:
             []
             [$($bty => $brows $bcols)+]
         }
@@ -855,7 +859,7 @@ macro_rules! _matrix_transpose_impl {
 
 #[macro_export]
 macro_rules! matrices {
-    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $(let $synonym:path => $dims:tt)*) => (
+    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $($synonym:path => $dims:tt)*) => (
         _behemoth_in_wrapper_check!();
 
         _use_Matrix!();
@@ -880,66 +884,172 @@ macro_rules! matrices {
             )+
         }
 
-        _matrices_auto_mul_impls!($($tyname => $rows $cols)+);
+        macro_rules! _matrix_synonym_check {
+            $(
+                ($rows, $cols) => (_matrix_synonym_impl!(););
+            )+
+            (1, 1) => ();
+            $(
+                ($rows, 1) => ();
+                (1, $cols) => ();
+                ($rows, $rows) => ();
+                ($cols, $cols) => ();
+            )+
+        }
+
+        _matrices_auto_mul_impls!($scalar: $($tyname => $rows $cols)+);
 
         $(
             as_items! {
-                impl From<$synonym> for _matrix!(1, $dims) {
-                    #[inline]
-                    fn from(vec: $synonym) -> Self {
-                        _matrix!(1, $dims)([vec.into()])
-                    }
+                macro_rules! _matrix_synonym_impl {
+                    () => (
+                        log_syntax!("Generating From: " $synonym -> (1, $dims));
+
+                        impl From<$synonym> for _matrix!(1, $dims) {
+                            #[inline]
+                            fn from(vec: $synonym) -> Self {
+                                _matrix!(1, $dims)([vec.into()])
+                            }
+                        }
+
+                        impl From<_matrix!(1, $dims)> for $synonym {
+                            #[inline]
+                            fn from(mat: _matrix!(1, $dims)) -> Self {
+                                $synonym::from(mat.0);
+                            }
+                        }
+                    );
                 }
+                _matrix_synonym_check!(1, $dims);
 
-                impl From<$synonym> for _matrix!($dims, 1) {
-                    #[inline]
-                    fn from(vec: $synonym) -> Self {
-                        _matrix!($dims, 1)(vec.into())
-                    }
+                macro_rules! _matrix_synonym_impl {
+                    () => (
+                        log_syntax!("Generating From: " $synonym -> ($dims, 1));
+
+                        impl From<$synonym> for _matrix!($dims, 1) {
+                            #[inline]
+                            fn from(vec: $synonym) -> Self {
+                                _matrix!($dims, 1)(vec.into())
+                            }
+                        }
+
+                        impl From<_matrix!($dims, 1)> for $synonym {
+                            #[inline]
+                            fn from(mat: _matrix!($dims, 1)) -> Self {
+                                $synonym::from(mat.0);
+                            }
+                        }
+                    );
                 }
+                _matrix_synonym_check!($dims, 1);
 
-                impl From<$synonym> for _matrix!($dims, $dims) {
-                    #[inline]
-                    fn from(vec: $synonym) -> Self {
-                        <_matrix!($dims, $dims) as From<[$scalar; $dims]>>::from(vec.into())
-                    }
+                macro_rules! _matrix_synonym_impl {
+                    () => (
+                        log_syntax!("Generating From: " $synonym -> ($dims, $dims));
+
+                        impl From<$synonym> for _matrix!($dims, $dims) {
+                            #[inline]
+                            fn from(vec: $synonym) -> Self {
+                                <_matrix!($dims, $dims) as From<[$scalar; $dims]>>::from(vec.into())
+                            }
+                        }
+                    );
                 }
+                _matrix_synonym_check!($dims, $dims);
 
-                impl Mul<_matrix!(1, $dims)> for $synonym {
-                    type Output = _matrix!($dims, $dims);
+                macro_rules! _matrix_synonym_impl {
+                    () => (
+                        macro_rules! _matrix_synonym_impl {
+                            () => (
+                                macro_rules! _matrix_synonym_impl {
+                                    () => (
+                                        impl Mul<$synonym> for _matrix!($dims, 1) {
+                                            type Output = _matrix!($dims, $dims);
 
-                    #[inline]
-                    fn mul(self, rhs: _matrix!(1, $dims)) -> _matrix!($dims, $dims) {
-                        <_matrix!($dims, 1) as From<$synonym>>::from(self) * rhs
-                    }
+                                            #[inline]
+                                            fn mul(self, rhs: $synonym) -> _matrix!($dims, $dims) {
+                                                self * <_matrix!(1, $dims) as From<$synonym>>::from(rhs)
+                                            }
+                                        }
+
+                                        impl Mul<_matrix!(1, $dims)> for $synonym {
+                                            type Output = _matrix!($dims, $dims);
+
+                                            #[inline]
+                                            fn mul(self, rhs: _matrix!(1, $dims)) -> _matrix!($dims, $dims) {
+                                                <_matrix!($dims, 1) as From<$synonym>>::from(self) * rhs
+                                            }
+                                        }
+                                    );
+                                }
+                                _matrix_synonym_check!(1, $dims);
+                            );
+                        }
+                        _matrix_synonym_check!($dims, 1);
+
+                        log_syntax!("Generating Mul: " $synonym * [$dims, $dims]);
+
+                        impl Mul<_matrix!($dims, $dims)> for $synonym {
+                            type Output = $synonym;
+
+                            #[inline]
+                            fn mul(self, rhs: _matrix!($dims, $dims)) -> $synonym {
+                                let arr = <Self as Into<[[$scalar; $dims]; 1]>>::into(self);
+                                <Self as From<[[$scalar; $dims]; 1]>>::from(
+                                    _matrix_mul_impl!([1, $dims], [$dims, $dims] arr, rhs, $scalar)
+                                )
+                            }
+                        }
+
+                        log_syntax!("Generating Mul: " [$dims, $dims] * $synonym);
+
+                        impl Mul<$synonym> for _matrix!($dims, $dims) {
+                            type Output = $synonym;
+
+                            #[inline]
+                            fn mul(self, rhs: $synonym) -> $synonym {
+                                let arr = <$synonym as Into<[[$scalar; 1]; $dims]>>::into(rhs);
+                                <$synonym as From<[[$scalar; 1]; $dims]>>::from(
+                                    _matrix_mul_impl!([$dims, $dims], [$dims, 1] self, arr, $scalar)
+                                )
+                            }
+                        }
+                    );
                 }
+                _matrix_synonym_check!($dims, $dims);
 
-                impl Mul<_matrix!($dims, 1)> for $synonym {
-                    type Output = _matrix!(1, 1);
+                macro_rules! _matrix_synonym_impl {
+                    () => (
+                        macro_rules! _matrix_synonym_impl {
+                            () => (
+                                macro_rules! _matrix_synonym_impl {
+                                    () => (
+                                        impl Mul<_matrix!($dims, 1)> for $synonym {
+                                            type Output = _matrix!(1, 1);
 
-                    #[inline]
-                    fn mul(self, rhs: _matrix!($dims, 1)) -> _matrix!(1, 1) {
-                        <_matrix!(1, $dims) as From<$synonym>>::from(self) * rhs
-                    }
+                                            #[inline]
+                                            fn mul(self, rhs: _matrix!($dims, 1)) -> _matrix!(1, 1) {
+                                                <_matrix!(1, $dims) as From<$synonym>>::from(self) * rhs
+                                            }
+                                        }
+
+                                        impl Mul<$synonym> for _matrix!(1, $dims) {
+                                            type Output = _matrix!(1, 1);
+
+                                            #[inline]
+                                            fn mul(self, rhs: $synonym) -> _matrix!(1, 1) {
+                                                self * <_matrix!($dims, 1) as From<$synonym>>::from(rhs)
+                                            }
+                                        }
+                                    );
+                                }
+                                _matrix_synonym_check!(1, $dims);
+                            );
+                        }
+                        _matrix_synonym_check!($dims, 1);
+                    );
                 }
-
-                impl Mul<$synonym> for _matrix!(1, $dims) {
-                    type Output = _matrix!(1, 1);
-
-                    #[inline]
-                    fn mul(self, rhs: $synonym) -> _matrix!(1, 1) {
-                        self * <_matrix!($dims, 1) as From<$synonym>>::from(rhs)
-                    }
-                }
-
-                impl Mul<$synonym> for _matrix!($dims, 1) {
-                    type Output = _matrix!($dims, $dims);
-
-                    #[inline]
-                    fn mul(self, rhs: $synonym) -> _matrix!($dims, $dims) {
-                        self * <_matrix!(1, $dims) as From<$synonym>>::from(rhs)
-                    }
-                }
+                _matrix_synonym_check!(1, 1);
             }
         )*
 
@@ -953,7 +1063,7 @@ macro_rules! matrices {
                     const COLS: usize = $cols;
                 }
 
-                impl $crate::traits::Matrix for $tyname {
+                impl Matrix for $tyname {
                     type Scalar = $scalar;
                     type Transpose = _matrix!($cols, $rows);
 

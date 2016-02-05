@@ -4,7 +4,6 @@
 #![feature(type_macros)]
 
 #[macro_use] extern crate behemoth;
-use behemoth::{Matrix, Square};
 
 behemoth! {
     matrices! {

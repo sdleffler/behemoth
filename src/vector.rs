@@ -1,3 +1,4 @@
+#[macro_export]
 macro_rules! _vector_binop_impl {
     ($name:ident $optrait:ident { $($it:tt)* }) => (
         as_items!(impl $optrait for $name {
@@ -26,6 +27,7 @@ macro_rules! _vector_binop_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_scalar_binop_impl {
     (@commutative $name:ident $scalar:ty, $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
         impl $optrait<$name> for $scalar {
@@ -83,6 +85,7 @@ macro_rules! _vector_scalar_binop_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_unop_impl {
     ($name:ident $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
         impl $optrait for $name {
@@ -113,6 +116,7 @@ macro_rules! _vector_unop_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_zero_impl {
     ($name:ident { $($vn:ident: $vt:ty),* }) => (
         impl Zero for $name {
@@ -131,6 +135,7 @@ macro_rules! _vector_zero_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_trait_impl {
     (Add $name:ident $scalar:ty, $body:tt _) => (
         _vector_binop_impl!($name Add add $body +);
@@ -177,10 +182,11 @@ macro_rules! _vector_trait_impl {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_structure {
     ($name:ident { $($vn:ident: $vt:ty),* }) => (
 
-        #[derive(Copy, Clone, Debug)]
+        #[derive(Copy, Clone, Debug, PartialEq)]
         pub struct $name { $($vn: $vt),* }
 
         #[allow(dead_code)]
@@ -191,7 +197,7 @@ macro_rules! _vector_structure {
         }
     );
     ($name:ident ( $vt:ty )) => (
-        #[derive(Copy, Clone, Debug)]
+        #[derive(Copy, Clone, Debug, PartialEq)]
         pub struct $name ( $vt );
 
         #[allow(dead_code)]
@@ -203,6 +209,7 @@ macro_rules! _vector_structure {
     );
 }
 
+#[macro_export]
 macro_rules! _vector_space_recurse {
     ($tr:ident { $($unimpl:ident)* }, $($rest:tt)*) =>
         (_vector_space_recurse!($tr { $($unimpl)* } {} $($rest)*););
@@ -299,11 +306,13 @@ macro_rules! vector_space {
     );
 }
 
+#[macro_export]
 macro_rules! _sum {
     ($head:expr, $($body:expr),*) => ($head + _sum!($($body),*));
     ($tail:expr) => ($tail);
 }
 
+#[macro_export]
 macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $x:ident $y:ident) => (
         _use_Cross!();
@@ -350,10 +359,7 @@ macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $($else_:ident)*) => ();
 }
 
-macro_rules! _replace {
-    ($id:ident, $e:expr) => ($e)
-}
-
+#[macro_export]
 macro_rules! _zip_fold_consts {
     ($acc:expr, $fid:ident $(,$id:ident)*) => (
         const $fid: usize = $acc;
@@ -380,33 +386,49 @@ macro_rules! ntuple_space {
         _use_Index!();
         _use_IndexMut!();
 
-        impl From<$name> for [$t; _sum!($(_replace!($e, 1)),*)] {
+        impl From<$name> for [$t; _sum!($(replace!($e, 1)),*)] {
             #[inline]
             fn from(t: $name) -> Self {
                 [ $(t.$e),* ]
             }
         }
 
-        impl From<$name> for [[$t; 1]; _sum!($(_replace!($e, 1)),*)] {
+        impl From<$name> for [[$t; _sum!($(replace!($e, 1)),*)]; 1] {
+            #[inline]
+            fn from(t: $name) -> Self {
+                [[ $(t.$e),* ]]
+            }
+        }
+
+        impl From<$name> for [[$t; 1]; _sum!($(replace!($e, 1)),*)] {
             #[inline]
             fn from(t: $name) -> Self {
                 [ $([t.$e]),* ]
             }
         }
 
-        impl From<[$t; _sum!($(_replace!($e, 1)),*)]> for $name {
+        impl From<[$t; _sum!($(replace!($e, 1)),*)]> for $name {
             #[inline]
             #[allow(non_upper_case_globals)]
-            fn from(arr: [$t; _sum!($(_replace!($e, 1)),*)]) -> Self {
+            fn from(arr: [$t; _sum!($(replace!($e, 1)),*)]) -> Self {
                 _zip_fold_consts!(0usize, $($e),*);
                 $name { $($e: arr[$e]),* }
             }
         }
 
-        impl From<[[$t; 1]; _sum!($(_replace!($e, 1)),*)]> for $name {
+        impl From<[[$t; _sum!($(replace!($e, 1)),*)]; 1]> for $name {
             #[inline]
             #[allow(non_upper_case_globals)]
-            fn from(arr: [[$t; 1]; _sum!($(_replace!($e, 1)),*)]) -> Self {
+            fn from(arr: [[$t; _sum!($(replace!($e, 1)),*)]; 1]) -> Self {
+                _zip_fold_consts!(0usize, $($e),*);
+                $name { $($e: arr[0][$e]),* }
+            }
+        }
+
+        impl From<[[$t; 1]; _sum!($(replace!($e, 1)),*)]> for $name {
+            #[inline]
+            #[allow(non_upper_case_globals)]
+            fn from(arr: [[$t; 1]; _sum!($(replace!($e, 1)),*)]) -> Self {
                 _zip_fold_consts!(0usize, $($e),*);
                 $name { $($e: arr[$e][0]),* }
             }
@@ -442,6 +464,7 @@ macro_rules! ntuple_space {
     );
 }
 
+#[macro_export]
 macro_rules! euclidean_space {
     (
         $name:ident: $t:ty {

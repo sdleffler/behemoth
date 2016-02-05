@@ -9,6 +9,28 @@ macro_rules! as_items {
 }
 
 #[macro_export]
+macro_rules! as_ty {
+    ($t:ty) => ($t)
+}
+
+#[macro_export]
+macro_rules! replace {
+    ($id:ident, $e:expr) => ($e)
+}
+
+#[macro_export]
+macro_rules! is_empty {
+    (() {$($body:tt)*}) => ($($body:tt)*);
+    (($($notempty:tt)+) $body:tt) => ();
+}
+
+#[macro_export]
+macro_rules! is_not_empty {
+    (($($notempty:tt)+) $body:tt) => ($($body:tt)*);
+    (() {$($body:tt)*}) => ();
+}
+
+#[macro_export]
 macro_rules! is_eq {
     (
         if ($($thingA:tt)*) == ($($thingB:tt)*) {
@@ -26,6 +48,7 @@ macro_rules! is_eq {
     );
 }
 
+#[macro_export]
 macro_rules! lazy_single_instantiate {
     (@remove
         ($($remove:tt)*) $name:ident
@@ -92,6 +115,7 @@ macro_rules! lazy_single_use {
     );
 }
 
+#[macro_export]
 macro_rules! lazy_cycle_instantiate {
     (@remove
         ($($remove:tt)*) $name:ident
