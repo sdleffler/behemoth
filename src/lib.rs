@@ -24,6 +24,8 @@ pub mod traits;
 #[macro_use]
 pub mod vector;
 
+pub use traits::*;
+
 macro_rules! _behemoth_in_wrapper_check {
     () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
 }
