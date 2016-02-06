@@ -28,6 +28,35 @@ macro_rules! _vector_binop_impl {
 }
 
 #[macro_export]
+macro_rules! _vector_assign_binop_impl {
+    ($name:ident $optrait:ident { $($it:tt)* }) => (
+        as_items! {
+            impl $optrait for $name {
+                $($it)*
+            }
+        }
+    );
+    ($name:ident $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
+        as_items! {
+            impl $optrait for $name {
+                fn $opfunc (&mut self, other: $name) {
+                    $(self.$vn $binop other.$vn;)*
+                }
+            }
+        }
+    );
+    ($name:ident $optrait:ident $opfunc:ident ( $vt:ty ) $binop:tt) => (
+        as_items! {
+            impl $optrait for $name {
+                fn $opfunc (&mut self, other: $name) {
+                    self.0 $binop other.0;
+                }
+            }
+        }
+    );
+}
+
+#[macro_export]
 macro_rules! _vector_scalar_binop_impl {
     (@commutative $name:ident $scalar:ty, $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
         impl $optrait<$name> for $scalar {
@@ -86,22 +115,51 @@ macro_rules! _vector_scalar_binop_impl {
 }
 
 #[macro_export]
-macro_rules! _vector_unop_impl {
-    ($name:ident $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
-        impl $optrait for $name {
-            type Output = $name;
-
-            fn $opfunc (self) -> $name {
-                $name { $($vn: as_expr!($binop self.$vn)),* }
+macro_rules! _vector_scalar_assign_binop_impl {
+    ($name:ident $scalar:ty, $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $binop:tt) => (
+        as_items! {
+            impl $optrait<$scalar> for $name {
+                fn $opfunc (&mut self, other: $scalar) {
+                    $(self.$vn $binop other;)*
+                }
             }
         }
     );
-    ($name:ident $optrait:ident $opfunc:ident ( $vt:ty ) $binop:tt) => (
+    ($name:ident $scalar:ty, $optrait:ident $opfunc:ident ( $vt:ty ) $binop:tt) => (
+        as_items! {
+            impl $optrait<$scalar> for $name {
+                fn $opfunc (&mut self, other: $scalar) {
+                    self.0 $binop other;
+                }
+            }
+        }
+    );
+    ($name:ident $scalar:ty, $optrait:ident { $($it:tt)* }) => (
+        as_items! {
+            impl $optrait<$scalar> for $name {
+                $($it)*
+            }
+        }
+    );
+}
+
+#[macro_export]
+macro_rules! _vector_unop_impl {
+    ($name:ident $optrait:ident $opfunc:ident { $($vn:ident: $vt:ty),* } $unop:tt) => (
         impl $optrait for $name {
             type Output = $name;
 
             fn $opfunc (self) -> $name {
-                $name ( as_expr!($binop self.0) )
+                $name { $($vn: as_expr!($unop self.$vn)),* }
+            }
+        }
+    );
+    ($name:ident $optrait:ident $opfunc:ident ( $vt:ty ) $unop:tt) => (
+        impl $optrait for $name {
+            type Output = $name;
+
+            fn $opfunc (self) -> $name {
+                $name ( as_expr!($unop self.0) )
             }
         }
     );
@@ -144,11 +202,25 @@ macro_rules! _vector_trait_impl {
         _vector_binop_impl!($name Add { $($it)* });
     );
 
+    (AddAssign $name:ident $scalar:ty, $body:tt _) => (
+        _vector_assign_binop_impl!($name AddAssign add_assign $body +=);
+    );
+    (AddAssign $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
+        _vector_assign_binop_impl!($name AddAssign { $($it)* });
+    );
+
     (Sub $name:ident $scalar:ty, $body:tt _) => (
         _vector_binop_impl!($name Sub sub $body -);
     );
     (Sub $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
         _vector_binop_impl!($name Sub { $($it)* });
+    );
+
+    (SubAssign $name:ident $scalar:ty, $body:tt _) => (
+        _vector_assign_binop_impl!($name SubAssign sub_assign $body -=);
+    );
+    (SubAssign $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
+        _vector_assign_binop_impl!($name SubAssign { $($it)* });
     );
 
     (Mul $name:ident $scalar:ty, $body:tt _) => (
@@ -160,11 +232,25 @@ macro_rules! _vector_trait_impl {
         _vector_scalar_binop_impl!(@commutative $name $scalar, Mul { $($it_b)* });
     );
 
+    (MulAssign $name:ident $scalar:ty, $body:tt _) => (
+        _vector_scalar_assign_binop_impl!($name $scalar, MulAssign mul_assign $body *=);
+    );
+    (MulAssign $name:ident $scalar:ty, $body:tt { { $($it_a:tt)* } { $($it_b:tt)* } }) => (
+        _vector_scalar_assign_binop_impl!($name $scalar, MulAssign { $($it_a)* });
+    );
+
     (Div $name:ident $scalar:ty, $body:tt _) => (
         _vector_scalar_binop_impl!($name $scalar, Div div $body /);
     );
     (Div $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
         _vector_scalar_binop_impl!($name $scalar, Div { $($it)* });
+    );
+
+    (DivAssign $name:ident $scalar:ty, $body:tt _) => (
+        _vector_scalar_assign_binop_impl!($name $scalar, DivAssign div_assign $body /=);
+    );
+    (DivAssign $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
+        _vector_scalar_assign_binop_impl!($name $scalar, DivAssign { $($it)* });
     );
 
     (Neg $name:ident $scalar:ty, $body:tt _) => (
@@ -187,7 +273,7 @@ macro_rules! _vector_structure {
     ($name:ident { $($vn:ident: $vt:ty),* }) => (
 
         #[derive(Copy, Clone, Debug, PartialEq)]
-        pub struct $name { $($vn: $vt),* }
+        pub struct $name { $(pub $vn: $vt),* }
 
         #[allow(dead_code)]
         impl $name {
@@ -198,12 +284,12 @@ macro_rules! _vector_structure {
     );
     ($name:ident ( $vt:ty )) => (
         #[derive(Copy, Clone, Debug, PartialEq)]
-        pub struct $name ( $vt );
+        pub struct $name ( pub $vt );
 
         #[allow(dead_code)]
         impl $name {
-            pub fn new($v: $vt) {
-                $name ( $v )
+            pub fn new(v: $vt) -> $name {
+                $name ( v )
             }
         }
     );
@@ -221,11 +307,25 @@ macro_rules! _vector_space_recurse {
         (_vector_space_recurse!(Add { $($tail)* } { $head $($checked)* }
             $($rest)*););
 
+    (AddAssign { AddAssign $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(AddAssign { $($tail)* } { $($checked)* }
+            $($rest)*););
+    (AddAssign { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(AddAssign { $($tail)* } { $head $($checked)* }
+            $($rest)*););
+
     (Sub { Sub $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
         (_vector_space_recurse!(Sub { $($tail)* } { $($checked)* }
             $($rest)*););
     (Sub { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
         (_vector_space_recurse!(Sub { $($tail)* } { $head $($checked)* }
+            $($rest)*););
+
+    (SubAssign { SubAssign $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(SubAssign { $($tail)* } { $($checked)* }
+            $($rest)*););
+    (SubAssign { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(SubAssign { $($tail)* } { $head $($checked)* }
             $($rest)*););
 
     (Mul { Mul $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
@@ -235,11 +335,25 @@ macro_rules! _vector_space_recurse {
         (_vector_space_recurse!(Mul { $($tail)* } { $head $($checked)* }
             $($rest)*););
 
+    (MulAssign { MulAssign $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(MulAssign { $($tail)* } { $($checked)* }
+            $($rest)*););
+    (MulAssign { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(MulAssign { $($tail)* } { $head $($checked)* }
+            $($rest)*););
+
     (Div { Div $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
         (_vector_space_recurse!(Div { $($tail)* } { $($checked)* }
             $($rest)*););
     (Div { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
         (_vector_space_recurse!(Div { $($tail)* } { $head $($checked)* }
+            $($rest)*););
+
+    (DivAssign { DivAssign $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(DivAssign { $($tail)* } { $($checked)* }
+            $($rest)*););
+    (DivAssign { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(DivAssign { $($tail)* } { $head $($checked)* }
             $($rest)*););
 
     (Neg { Neg $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
@@ -287,9 +401,13 @@ macro_rules! vector_space {
         $( $rest:tt )*
     ) => (
         _use_Add!();
+        _use_AddAssign!();
         _use_Sub!();
+        _use_SubAssign!();
         _use_Mul!();
+        _use_MulAssign!();
         _use_Div!();
+        _use_DivAssign!();
         _use_Neg!();
 
         _use_Vector!();
@@ -301,8 +419,22 @@ macro_rules! vector_space {
             type Scalar = $scalar;
         }
 
-        vector_space!({ Add Sub Mul Div Neg Zero } $name $scalar, $body
-            $( $rest )*);
+        vector_space! {
+            {
+                Add
+                AddAssign
+                Sub
+                SubAssign
+                Mul
+                MulAssign
+                Div
+                DivAssign
+                Neg
+                Zero
+            }
+            $name $scalar, $body
+            $( $rest )*
+        }
     );
 }
 
@@ -369,7 +501,7 @@ macro_rules! _zip_fold_consts {
 }
 
 #[macro_export]
-macro_rules! ntuple_space {
+macro_rules! ntuple {
     (
         $name:ident: $t:ty {
             $($e:ident),*
@@ -472,7 +604,7 @@ macro_rules! euclidean {
         })+
     ) => (
         $(
-            ntuple_space! {
+            ntuple! {
                 $name: $t {
                     $($e),*
                 }

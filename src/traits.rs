@@ -56,13 +56,13 @@ pub trait Square: Matrix
     fn transpose_mut(&mut self);
 }
 
-pub trait Vector: Add<Output=Self>
-                + Sub<Output=Self>
-                + Mul<<Self as Vector>::Scalar, Output=Self>
-                + Div<<Self as Vector>::Scalar, Output=Self>
+pub trait Vector: Add<Output=Self> + AddAssign
+                + Sub<Output=Self> + SubAssign
+                + Mul<<Self as Vector>::Scalar, Output=Self> + MulAssign<<Self as Vector>::Scalar>
+                + Div<<Self as Vector>::Scalar, Output=Self> + DivAssign<<Self as Vector>::Scalar>
                 + Neg<Output=Self>
                 + Zero where
-          <Self as Vector>::Scalar: Mul<Self, Output=Self> {
+          <Self as Vector>::Scalar: Field + Mul<Self, Output=Self> {
     type Scalar: Field;
 }
 

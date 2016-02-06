@@ -14,6 +14,11 @@ macro_rules! as_ty {
 }
 
 #[macro_export]
+macro_rules! as_stmts {
+    ($($s:stmt)*) => ($($s)*)
+}
+
+#[macro_export]
 macro_rules! replace {
     ($id:ident, $e:expr) => ($e)
 }

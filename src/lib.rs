@@ -1,15 +1,9 @@
-#![allow(unused_features)]
-
 #![feature(log_syntax)]
 #![feature(trace_macros)]
 #![feature(type_macros)]
 #![feature(augmented_assignments)]
 #![feature(op_assign_traits)]
 #![feature(associated_consts)]
-#![feature(test)]
-
-#[cfg(test)]
-extern crate test;
 
 #[cfg(any(feature = "matrix_rand", feature = "vector_rand"))]
 extern crate rand;
