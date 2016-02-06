@@ -2,6 +2,7 @@
 #![feature(augmented_assignments)]
 #![feature(op_assign_traits)]
 #![feature(type_macros)]
+#![feature(log_syntax)]
 
 #[macro_use] extern crate behemoth;
 use behemoth::Square;

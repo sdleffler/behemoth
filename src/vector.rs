@@ -465,46 +465,46 @@ macro_rules! ntuple_space {
 }
 
 #[macro_export]
-macro_rules! euclidean_space {
+macro_rules! euclidean {
     (
-        $name:ident: $t:ty {
+        $($name:ident: $t:ty {
             $($e:ident),*
-        }
-
-        $( $rest:tt )*
+        })+
     ) => (
-        ntuple_space! {
-            $name: $t {
-                $($e),*
+        $(
+            ntuple_space! {
+                $name: $t {
+                    $($e),*
+                }
             }
-        }
 
-        _use_InnerProduct!();
-        _use_Norm!();
-        _use_Metric!();
+            _use_InnerProduct!();
+            _use_Norm!();
+            _use_Metric!();
 
-        impl InnerProduct for $name {
-            fn dot(self, other: $name) -> $t {
-                _sum!($(self.$e * other.$e),*)
+            impl InnerProduct for $name {
+                fn dot(self, other: $name) -> $t {
+                    _sum!($(self.$e * other.$e),*)
+                }
             }
-        }
 
-        impl Norm for $name {
-            type Length = $t;
+            impl Norm for $name {
+                type Length = $t;
 
-            fn length(self) -> $t {
-                _sum!($( (self.$e * self.$e) ),*).sqrt()
+                fn length(self) -> $t {
+                    _sum!($( (self.$e * self.$e) ),*).sqrt()
+                }
             }
-        }
 
-        impl Metric for $name {
-            type Distance = $t;
+            impl Metric for $name {
+                type Distance = $t;
 
-            fn distance(self, other: $name) -> $t {
-                (self - other).length()
+                fn distance(self, other: $name) -> $t {
+                    (self - other).length()
+                }
             }
-        }
 
-        _try_dimension_specific_op!($name $t, $($e)*);
+            _try_dimension_specific_op!($name $t, $($e)*);
+        )+
     );
 }

@@ -33,14 +33,19 @@ pub trait Matrix: Add<Output=Self> + AddAssign
                 + Neg<Output=Self>
                 + Zero {
     type Scalar: Field + Mul<Self, Output=Self>;
-    type Transpose: Matrix;
 
     fn dimensions(&self) -> (usize, usize);
+}
+
+pub trait Transpose: Matrix where
+        <Self as Matrix>::Scalar: Mul<Self::Transpose, Output=Self::Transpose> {
+    type Transpose: Matrix<Scalar=Self::Scalar>;
 
     fn transpose(&self) -> Self::Transpose;
 }
 
-pub trait Square: Matrix<Transpose=Self>
+pub trait Square: Matrix
+                + Transpose<Transpose=Self>
                 + Mul<Output=Self>
                 + MulAssign {
 

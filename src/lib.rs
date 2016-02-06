@@ -61,6 +61,7 @@ macro_rules! behemoth {
 
             _use_Matrix => ( use $crate::Matrix; );
             _use_Square => ( use $crate::Square; );
+            _use_Transpose => (use $crate::Transpose; );
 
             _use_Vector => ( use $crate::Vector; );
             _use_Cross => ( use $crate::Cross; );

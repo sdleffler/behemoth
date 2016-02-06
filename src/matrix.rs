@@ -858,8 +858,137 @@ macro_rules! _matrix_transpose_impl {
 }
 
 #[macro_export]
+macro_rules! _matrix_synonym_space_impl {
+    (
+        @outer
+        $scalar:ty:
+        {$($lsyn:path => $ldims:tt)+}
+        $rsyns:tt
+        $mats:tt
+    ) => (
+        $(
+            _matrix_synonym_space_impl! {
+                @middle
+                $scalar:
+                $lsyn => $ldims
+                $rsyns
+                $mats
+            }
+        )+
+    );
+    (@middle $scalar:ty: $lsyn:path => $ldims:tt {$($rsyn:path => $rdims:tt)+} $mats:tt) => (
+        as_items! {
+            macro_rules! _matrix_synonym_impl {
+                () => (
+                    impl From<$lsyn> for _matrix!(1, $ldims) {
+                        #[inline]
+                        fn from(vec: $lsyn) -> Self {
+                            _matrix!(1, $ldims)([vec.into()])
+                        }
+                    }
+
+                    impl From<_matrix!(1, $ldims)> for $lsyn {
+                        #[inline]
+                        fn from(mat: _matrix!(1, $ldims)) -> Self {
+                            <$lsyn as From<[[$scalar; $ldims]; 1]>>::from(mat.0)
+                        }
+                    }
+                );
+            }
+            _matrix_synonym_check!(1, $ldims);
+
+            macro_rules! _matrix_synonym_impl {
+                () => (
+                    impl From<$lsyn> for _matrix!($ldims, 1) {
+                        #[inline]
+                        fn from(vec: $lsyn) -> Self {
+                            _matrix!($ldims, 1)(vec.into())
+                        }
+                    }
+
+                    impl From<_matrix!($ldims, 1)> for $lsyn {
+                        #[inline]
+                        fn from(mat: _matrix!($ldims, 1)) -> Self {
+                            <$lsyn as From<[[$scalar; 1]; $ldims]>>::from(mat.0)
+                        }
+                    }
+                );
+            }
+            _matrix_synonym_check!($ldims, 1);
+
+            macro_rules! _matrix_synonym_impl {
+                () => (
+                    impl From<$lsyn> for _matrix!($ldims, $ldims) {
+                        #[inline]
+                        fn from(vec: $lsyn) -> Self {
+                            <_matrix!($ldims, $ldims) as From<[$scalar; $ldims]>>::from(vec.into())
+                        }
+                    }
+                );
+            }
+            _matrix_synonym_check!($ldims, $ldims);
+
+            $(
+                _matrix_synonym_space_impl! {
+                    @inner
+                    $scalar:
+                    $lsyn => $ldims
+                    $rsyn => $rdims
+                    $mats
+                }
+            )+
+        }
+    );
+    (@inner $scalar:ty: $lsyn:path => $ldims:tt $rsyn:path => $rdims:tt { $($matname:ident => $mrows:tt, $mcols:tt)+ }) => (
+        $(
+            macro_rules! _matrix_synonym_impl {
+                () => (
+                    n_pairs_are_eq! {
+                        if ($ldims) == ($mcols) && ($mrows) == ($rdims) {
+                            impl Mul<$lsyn> for _matrix!($mrows, $mcols) {
+                                type Output = $rsyn;
+
+                                #[inline]
+                                fn mul(self, rhs: $lsyn) -> $rsyn {
+                                    let arr: [[$scalar; 1]; $ldims] = rhs.into();
+                                    <$rsyn as From<[[$scalar; 1]; $rdims]>>::from(
+                                        _matrix_mul_impl!([$mrows, $mcols],
+                                            [$ldims, 1] self, arr, $scalar))
+                                }
+                            }
+                        } else {}
+                    }
+
+                    n_pairs_are_eq! {
+                        if ($ldims) == ($mrows) && ($mcols) == ($rdims) {
+                            impl Mul<_matrix!($mrows, $mcols)> for $lsyn {
+                                type Output = $rsyn;
+
+                                #[inline]
+                                fn mul(self, rhs: _matrix!($mrows, $mcols)) -> $rsyn {
+                                    let arr: [[$scalar; $ldims]; 1] = self.into();
+                                    <$rsyn as From<[[$scalar; $rdims]; 1]>>::from(
+                                        _matrix_mul_impl!([1, $ldims],
+                                            [$mrows, $mcols] arr, rhs, $scalar))
+                                }
+                            }
+                        } else {}
+                    }
+                );
+            }
+            _matrix_synonym_check!($mrows, $mcols);
+        )+
+    );
+    ($scalar:ty: $mats:tt $($syns:tt)*) => (
+        $(
+            _matrix_synonym_space_impl!(@outer $scalar: $syns $syns $mats);
+        )*
+    );
+}
+
+#[macro_export]
 macro_rules! matrices {
-    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $($synonym:path => $dims:tt)*) => (
+    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $({ $($synonym:path => $dims:tt)+ })*) => (
         _behemoth_in_wrapper_check!();
 
         _use_Matrix!();
@@ -897,161 +1026,22 @@ macro_rules! matrices {
             )+
         }
 
+        macro_rules! _matrix_is_defined {
+            $(
+                ($rows, $cols) => (_matrix_isdef!(true););
+            )+
+            (1, 1) => (_matrix_isdef!(false););
+            $(
+                ($rows, 1) => (_matrix_isdef!(false););
+                (1, $cols) => (_matrix_isdef!(false););
+                ($rows, $rows) => (_matrix_isdef!(false););
+                ($cols, $cols) => (_matrix_isdef!(false););
+                ($cols, $rows) => (_matrix_isdef!(false););
+            )+
+        }
+
         _matrices_auto_mul_impls!($scalar: $($tyname => $rows $cols)+);
-
-        $(
-            as_items! {
-                macro_rules! _matrix_synonym_impl {
-                    () => (
-                        log_syntax!("Generating From: " $synonym -> (1, $dims));
-
-                        impl From<$synonym> for _matrix!(1, $dims) {
-                            #[inline]
-                            fn from(vec: $synonym) -> Self {
-                                _matrix!(1, $dims)([vec.into()])
-                            }
-                        }
-
-                        impl From<_matrix!(1, $dims)> for $synonym {
-                            #[inline]
-                            fn from(mat: _matrix!(1, $dims)) -> Self {
-                                $synonym::from(mat.0);
-                            }
-                        }
-                    );
-                }
-                _matrix_synonym_check!(1, $dims);
-
-                macro_rules! _matrix_synonym_impl {
-                    () => (
-                        log_syntax!("Generating From: " $synonym -> ($dims, 1));
-
-                        impl From<$synonym> for _matrix!($dims, 1) {
-                            #[inline]
-                            fn from(vec: $synonym) -> Self {
-                                _matrix!($dims, 1)(vec.into())
-                            }
-                        }
-
-                        impl From<_matrix!($dims, 1)> for $synonym {
-                            #[inline]
-                            fn from(mat: _matrix!($dims, 1)) -> Self {
-                                $synonym::from(mat.0);
-                            }
-                        }
-                    );
-                }
-                _matrix_synonym_check!($dims, 1);
-
-                macro_rules! _matrix_synonym_impl {
-                    () => (
-                        log_syntax!("Generating From: " $synonym -> ($dims, $dims));
-
-                        impl From<$synonym> for _matrix!($dims, $dims) {
-                            #[inline]
-                            fn from(vec: $synonym) -> Self {
-                                <_matrix!($dims, $dims) as From<[$scalar; $dims]>>::from(vec.into())
-                            }
-                        }
-                    );
-                }
-                _matrix_synonym_check!($dims, $dims);
-
-                macro_rules! _matrix_synonym_impl {
-                    () => (
-                        macro_rules! _matrix_synonym_impl {
-                            () => (
-                                macro_rules! _matrix_synonym_impl {
-                                    () => (
-                                        impl Mul<$synonym> for _matrix!($dims, 1) {
-                                            type Output = _matrix!($dims, $dims);
-
-                                            #[inline]
-                                            fn mul(self, rhs: $synonym) -> _matrix!($dims, $dims) {
-                                                self * <_matrix!(1, $dims) as From<$synonym>>::from(rhs)
-                                            }
-                                        }
-
-                                        impl Mul<_matrix!(1, $dims)> for $synonym {
-                                            type Output = _matrix!($dims, $dims);
-
-                                            #[inline]
-                                            fn mul(self, rhs: _matrix!(1, $dims)) -> _matrix!($dims, $dims) {
-                                                <_matrix!($dims, 1) as From<$synonym>>::from(self) * rhs
-                                            }
-                                        }
-                                    );
-                                }
-                                _matrix_synonym_check!(1, $dims);
-                            );
-                        }
-                        _matrix_synonym_check!($dims, 1);
-
-                        log_syntax!("Generating Mul: " $synonym * [$dims, $dims]);
-
-                        impl Mul<_matrix!($dims, $dims)> for $synonym {
-                            type Output = $synonym;
-
-                            #[inline]
-                            fn mul(self, rhs: _matrix!($dims, $dims)) -> $synonym {
-                                let arr = <Self as Into<[[$scalar; $dims]; 1]>>::into(self);
-                                <Self as From<[[$scalar; $dims]; 1]>>::from(
-                                    _matrix_mul_impl!([1, $dims], [$dims, $dims] arr, rhs, $scalar)
-                                )
-                            }
-                        }
-
-                        log_syntax!("Generating Mul: " [$dims, $dims] * $synonym);
-
-                        impl Mul<$synonym> for _matrix!($dims, $dims) {
-                            type Output = $synonym;
-
-                            #[inline]
-                            fn mul(self, rhs: $synonym) -> $synonym {
-                                let arr = <$synonym as Into<[[$scalar; 1]; $dims]>>::into(rhs);
-                                <$synonym as From<[[$scalar; 1]; $dims]>>::from(
-                                    _matrix_mul_impl!([$dims, $dims], [$dims, 1] self, arr, $scalar)
-                                )
-                            }
-                        }
-                    );
-                }
-                _matrix_synonym_check!($dims, $dims);
-
-                macro_rules! _matrix_synonym_impl {
-                    () => (
-                        macro_rules! _matrix_synonym_impl {
-                            () => (
-                                macro_rules! _matrix_synonym_impl {
-                                    () => (
-                                        impl Mul<_matrix!($dims, 1)> for $synonym {
-                                            type Output = _matrix!(1, 1);
-
-                                            #[inline]
-                                            fn mul(self, rhs: _matrix!($dims, 1)) -> _matrix!(1, 1) {
-                                                <_matrix!(1, $dims) as From<$synonym>>::from(self) * rhs
-                                            }
-                                        }
-
-                                        impl Mul<$synonym> for _matrix!(1, $dims) {
-                                            type Output = _matrix!(1, 1);
-
-                                            #[inline]
-                                            fn mul(self, rhs: $synonym) -> _matrix!(1, 1) {
-                                                self * <_matrix!($dims, 1) as From<$synonym>>::from(rhs)
-                                            }
-                                        }
-                                    );
-                                }
-                                _matrix_synonym_check!(1, $dims);
-                            );
-                        }
-                        _matrix_synonym_check!($dims, 1);
-                    );
-                }
-                _matrix_synonym_check!(1, 1);
-            }
-        )*
+        _matrix_synonym_space_impl!($scalar: { $($tyname => $rows, $cols)+ } $({$($synonym => $dims)+})*);
 
         $(
             as_items! {
@@ -1065,29 +1055,40 @@ macro_rules! matrices {
 
                 impl Matrix for $tyname {
                     type Scalar = $scalar;
-                    type Transpose = _matrix!($cols, $rows);
 
                     #[inline]
                     fn dimensions(&self) -> (usize, usize) { (Self::ROWS, Self::COLS) }
+                }
 
-                    #[inline]
-                    #[cfg(not(feature = "no_special_cases"))]
-                    fn transpose(&self) -> Self::Transpose {
-                        _matrix_transpose_impl!($rows, $cols, self)
-                    }
+                macro_rules! _matrix_isdef {
+                    (true) => (
+                        _use_Transpose!();
 
-                    #[inline]
-                    #[cfg(feature = "no_special_cases")]
-                    fn transpose(&self) -> Self::Transpose {
-                        let mut out = <Self::Transpose as Zero>::ZERO;
-                        for (i, row) in self.iter().enumerate() {
-                            for (j, &elem) in row.iter().enumerate() {
-                                out[j][i] = elem;
+                        impl Transpose for $tyname {
+                            type Transpose = _matrix!($cols, $rows);
+
+                            #[inline]
+                            #[cfg(not(feature = "no_special_cases"))]
+                            fn transpose(&self) -> Self::Transpose {
+                                _matrix_transpose_impl!($rows, $cols, self)
+                            }
+
+                            #[inline]
+                            #[cfg(feature = "no_special_cases")]
+                            fn transpose(&self) -> Self::Transpose {
+                                let mut out = <Self::Transpose as Zero>::ZERO;
+                                for (i, row) in self.iter().enumerate() {
+                                    for (j, &elem) in row.iter().enumerate() {
+                                        out[j][i] = elem;
+                                    }
+                                }
+                                out
                             }
                         }
-                        out
-                    }
+                    );
+                    (false) => ();
                 }
+                _matrix_is_defined!($cols, $rows);
 
                 impl Deref for $tyname {
                     type Target = [[$scalar; $cols]; $rows];
