@@ -13,7 +13,7 @@ behemoth! {
         f64:
         {
             Mat2x2 => 2, 2
-            Mat2x3 => 2, 3
+            Mat3x2 => 3, 2
             Mat3x3 => 3, 3
         }
 
@@ -30,8 +30,20 @@ behemoth! {
 }
 
 #[test]
-fn matrix_vector_same_dim_synonym_mul() {
+fn mat3x3_mul_vec3() {
     let x = Vec3::new(1., 1., 1.);
     let i = Mat3x3::identity();
     assert_eq!(i * x, x);
+}
+
+#[test]
+fn mat3x2_mul_vec2() {
+    let x = Vec2::new(1., 2.);
+    let a = Mat3x2::new([
+            [1., 0.],
+            [0., 1.],
+            [2., 2.],
+        ]);
+    let b = Vec3::new(1., 2., 6.);
+    assert_eq!(a * x, b);
 }

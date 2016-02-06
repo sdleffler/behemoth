@@ -1051,6 +1051,10 @@ macro_rules! matrices {
                 impl $tyname {
                     const ROWS: usize = $rows;
                     const COLS: usize = $cols;
+
+                    #[inline]
+                    #[allow(dead_code)]
+                    pub fn new(data: [[$scalar; $cols]; $rows]) -> $tyname { $tyname(data) }
                 }
 
                 impl Matrix for $tyname {
