@@ -986,26 +986,36 @@ macro_rules! _matrix_synonym_space_impl {
     );
 }
 
+macro_rules! _matrix_traitswitch {
+    (ApproxEq = !;) => (
+        macro_rules! _matrix_approxeq_call { () => (); }
+    );
+    ($traitswitch:ident = $arg:tt;) => (
+        !! "behemoth! matrices! error: unrecognized trait switch: " $traitswitch = $arg;
+    );
+}
+
 #[macro_export]
 macro_rules! matrices {
-    ($scalar:ty: { $($tyname:ident => $rows:tt, $cols:tt)+ } $({ $($synonym:path => $dims:tt)+ })*) => (
+    (
+        $scalar:ty:
+        { $($tyname:ident => $rows:tt, $cols:tt)+ }
+        $(
+            { $($synonym:path => $dims:tt)+ }
+        )*
+        $(
+            trait $traitswitch:ident = $arg:tt;
+        )*
+    ) => (
         _behemoth_in_wrapper_check!();
 
-        _use_Matrix!();
-        _use_One!();
-        _use_Zero!();
+        macro_rules! _matrix_approxeq_call {
+            () => (_matrix_approxeq_impl!(););
+        }
 
-        _use_Add!();
-        _use_AddAssign!();
-        _use_Sub!();
-        _use_SubAssign!();
-        _use_Mul!();
-        _use_MulAssign!();
-        _use_Div!();
-        _use_DivAssign!();
-        _use_Neg!();
-        _use_Deref!();
-        _use_DerefMut!();
+        $(
+            _matrix_traitswitch!($traitswitch = $arg;);
+        )*
 
         macro_rules! _matrix {
             $(
@@ -1066,8 +1076,6 @@ macro_rules! matrices {
 
                 macro_rules! _matrix_isdef {
                     (true) => (
-                        _use_Transpose!();
-
                         impl Transpose for $tyname {
                             type Transpose = _matrix!($cols, $rows);
 
@@ -1255,10 +1263,26 @@ macro_rules! matrices {
                 }
             }
 
+            macro_rules! _matrix_approxeq_impl {
+                () => (
+                    impl ApproxEq for $tyname {
+                        fn approx_eq(&self, other: &$tyname) -> bool {
+                            for (lrow, rrow) in self.iter().zip(other.iter()) {
+                                for (lelem, relem) in lrow.iter().zip(rrow.iter()) {
+                                    if lelem.approx_ne(&relem) {
+                                        return false;
+                                    }
+                                }
+                            }
+                            true
+                        }
+                    }
+                );
+            }
+            _matrix_approxeq_call!();
+
             is_eq! {
                 if ($rows) == ($cols) {
-                    _use_Square!();
-
                     impl Square for $tyname {
                         #[inline]
                         #[cfg(not(feature = "no_special_cases"))]

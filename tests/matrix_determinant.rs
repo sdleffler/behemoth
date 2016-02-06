@@ -5,7 +5,7 @@
 #![feature(log_syntax)]
 
 #[macro_use] extern crate behemoth;
-use behemoth::Square;
+use behemoth::{ApproxEq, Square};
 
 behemoth! {
     matrices! {
@@ -44,14 +44,14 @@ behemoth! {
 
 #[test]
 fn det_special_case() {
-    assert_eq!(Mat1x1([[5.]]).determinant(), 5.);
-    assert_eq!(Mat2x2([[2., 3.], [4., 1.]]).determinant(), -10.);
-    assert_eq!(Mat3x3([[7., 6., 5.], [4., 8., 4.], [10., 8., 2.]]).determinant(), -160.);
+    assert_approx_eq!(Mat1x1([[5.]]).determinant(), 5.);
+    assert_approx_eq!(Mat2x2([[2., 3.], [4., 1.]]).determinant(), -10.);
+    assert_approx_eq!(Mat3x3([[7., 6., 5.], [4., 8., 4.], [10., 8., 2.]]).determinant(), -160.);
 }
 
 #[test]
 fn det_general_case() {
-    assert_eq!(
+    assert_approx_eq!(
         Mat6x6([[1., 5., 2., 5., 5., 3.],
                 [2., 4., 3., 5., 2., 3.],
                 [1., 1., 1., 1., 1., 1.],

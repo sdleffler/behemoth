@@ -4,6 +4,7 @@
 #![feature(associated_consts)]
 
 #[macro_use] extern crate behemoth;
+use behemoth::ApproxEq;
 
 behemoth! {
     vector_space! {
@@ -24,7 +25,7 @@ behemoth! {
 fn tuplevec_arithmetic() {
     let x = ScalarVec(2.);
     let y = ScalarVec(3.);
-    assert_eq!(x + y, ScalarVec(5.));
-    assert_eq!(x - y, ScalarVec(-1.));
-    assert_eq!(x * 4., ScalarVec(8.));
+    assert_approx_eq!(x + y, ScalarVec(5.));
+    assert_approx_eq!(x - y, ScalarVec(-1.));
+    assert_approx_eq!(x * 4., ScalarVec(8.));
 }

@@ -6,7 +6,7 @@
 #![feature(log_syntax)]
 
 #[macro_use] extern crate behemoth;
-use behemoth::Square;
+use behemoth::{ApproxEq, Square};
 
 behemoth! {
     matrices! {
@@ -34,7 +34,7 @@ behemoth! {
 fn mat3x3_mul_vec3() {
     let x = Vec3::new(1., 1., 1.);
     let i = Mat3x3::identity();
-    assert_eq!(i * x, x);
+    assert_approx_eq!(i * x, x);
 }
 
 #[test]
@@ -46,7 +46,7 @@ fn mat3x2_mul_vec2() {
             [2., 2.],
         ]);
     let b = Vec3::new(1., 2., 6.);
-    assert_eq!(a * x, b);
+    assert_approx_eq!(a * x, b);
 }
 
 #[test]
@@ -57,5 +57,5 @@ fn mat2x3_mul_vec3() {
             [4., 3., 1.],
         ]);
     let b = Vec2::new(9., 15.);
-    assert_eq!(a * x, b);
+    assert_approx_eq!(a * x, b);
 }

@@ -1,4 +1,11 @@
 #[macro_export]
+macro_rules! assert_approx_eq {
+    ($lhs:expr, $rhs:expr) => (
+        assert!($lhs.approx_eq(&$rhs));
+    );
+}
+
+#[macro_export]
 macro_rules! as_expr {
     ($x:expr) => ($x)
 }

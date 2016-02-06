@@ -194,7 +194,27 @@ macro_rules! _vector_zero_impl {
 }
 
 #[macro_export]
+macro_rules! _vector_approxeq_impl {
+    ($name:ident { $($vn:ident: $vt:ty),* }) => (
+        impl ApproxEq for $name {
+            fn approx_eq(&self, other: &$name) -> bool {
+                $(self.$vn.approx_eq(&other.$vn))&&*
+            }
+        }
+    );
+    ($name:ident ( $vt:ty )) => (
+        impl ApproxEq for $name {
+            fn approx_eq(&self, other: &$name) -> bool {
+                self.0.approx_eq(&other.0)
+            }
+        }
+    );
+}
+
+#[macro_export]
 macro_rules! _vector_trait_impl {
+    ($tr:ident $name:ident $scalar:ty, $body:tt !) => ();
+
     (Add $name:ident $scalar:ty, $body:tt _) => (
         _vector_binop_impl!($name Add add $body +);
     );
@@ -266,12 +286,15 @@ macro_rules! _vector_trait_impl {
     (Zero $name:ident $scalar:ty, $body:tt { $($it:tt)* }) => (
         _vector_zero_impl!($name { $($it:tt)* });
     );
+
+    (ApproxEq $name:ident $scalar:ty, $body:tt _) => (
+        _vector_approxeq_impl!($name $body);
+    );
 }
 
 #[macro_export]
 macro_rules! _vector_structure {
     ($name:ident { $($vn:ident: $vt:ty),* }) => (
-
         #[derive(Copy, Clone, Debug, PartialEq)]
         pub struct $name { $(pub $vn: $vt),* }
 
@@ -370,6 +393,13 @@ macro_rules! _vector_space_recurse {
         (_vector_space_recurse!(Zero { $($tail)* } { $head $($checked)* }
             $($rest)*););
 
+    (ApproxEq { ApproxEq $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(ApproxEq { $($tail)* } { $($checked)* }
+            $($rest)*););
+    (ApproxEq { $head:ident $($tail:ident)* } { $($checked:ident)* } $($rest:tt)*) =>
+        (_vector_space_recurse!(ApproxEq { $($tail)* } { $head $($checked)* }
+            $($rest)*););
+
     ($tr:ident {} { $($unimpl:ident)* } $($rest:tt)*) =>
         (vector_space!({ $($unimpl)* } $($rest)*););
 }
@@ -400,19 +430,6 @@ macro_rules! vector_space {
 
         $( $rest:tt )*
     ) => (
-        _use_Add!();
-        _use_AddAssign!();
-        _use_Sub!();
-        _use_SubAssign!();
-        _use_Mul!();
-        _use_MulAssign!();
-        _use_Div!();
-        _use_DivAssign!();
-        _use_Neg!();
-
-        _use_Vector!();
-        _use_Zero!();
-
         _vector_structure!($name $body);
 
         impl Vector for $name {
@@ -431,6 +448,7 @@ macro_rules! vector_space {
                 DivAssign
                 Neg
                 Zero
+                ApproxEq
             }
             $name $scalar, $body
             $( $rest )*
@@ -447,8 +465,6 @@ macro_rules! _sum {
 #[macro_export]
 macro_rules! _try_dimension_specific_op {
     ($name:ident $t:ty, $x:ident $y:ident) => (
-        _use_Cross!();
-
         impl Cross for $name {
             type Perpendicular = $t;
 
@@ -476,8 +492,6 @@ macro_rules! _try_dimension_specific_op {
         }
     );
     ($name:ident $t:ty, $x:ident $y:ident $z:ident) => (
-        _use_Cross!();
-
         impl Cross for $name {
             type Perpendicular = $name;
 
@@ -514,9 +528,6 @@ macro_rules! ntuple {
                 Scalar = $t;
             }
         }
-
-        _use_Index!();
-        _use_IndexMut!();
 
         impl From<$name> for [$t; _sum!($(replace!($e, 1)),*)] {
             #[inline]
@@ -609,10 +620,6 @@ macro_rules! euclidean {
                     $($e),*
                 }
             }
-
-            _use_Dot!();
-            _use_Norm!();
-            _use_Metric!();
 
             impl Dot for $name {
                 fn dot(self, other: $name) -> $t {

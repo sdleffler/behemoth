@@ -87,3 +87,22 @@ pub trait Norm: Vector {
 
     fn length(self) -> Self::Length;
 }
+
+pub trait ApproxEq<Rhs = Self> {
+    fn approx_eq(&self, other: &Rhs) -> bool;
+    fn approx_ne(&self, other: &Rhs) -> bool { !self.approx_eq(other) }
+}
+
+impl ApproxEq for f32 {
+    fn approx_eq(&self, other: &Self) -> bool {
+        use std::f32;
+        (self - other).abs() < f32::EPSILON
+    }
+}
+
+impl ApproxEq for f64 {
+    fn approx_eq(&self, other: &Self) -> bool {
+        use std::f64;
+        (self - other).abs() < f64::EPSILON
+    }
+}

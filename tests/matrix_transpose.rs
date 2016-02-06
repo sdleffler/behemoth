@@ -5,7 +5,7 @@
 #![feature(log_syntax)]
 
 #[macro_use] extern crate behemoth;
-use behemoth::{Transpose};
+use behemoth::{ApproxEq, Transpose};
 
 behemoth! {
     matrices! {
@@ -43,29 +43,29 @@ behemoth! {
 
 #[test]
 fn transpose_special_case() {
-    assert_eq!(Mat1x1([[1.]]).transpose(), Mat1x1([[1.]]));
-    assert_eq!(Mat1x2([[1., 2.]]).transpose(), Mat2x1([[1.], [2.]]));
-    assert_eq!(Mat1x3([[1., 2., 3.]]).transpose(), Mat3x1([[1.], [2.], [3.]]));
-    assert_eq!(Mat1x4([[1., 2., 3., 4.]]).transpose(), Mat4x1([[1.], [2.], [3.], [4.]]));
-    assert_eq!(Mat2x1([[1.], [2.]]).transpose(), Mat1x2([[1., 2.]]));
-    assert_eq!(Mat2x2([[1., 2.], [3., 4.]]).transpose(), Mat2x2([[1., 3.], [2., 4.]]));
-    assert_eq!(Mat2x3([[1., 2., 3.], [4., 5., 6.]]).transpose(),
+    assert_approx_eq!(Mat1x1([[1.]]).transpose(), Mat1x1([[1.]]));
+    assert_approx_eq!(Mat1x2([[1., 2.]]).transpose(), Mat2x1([[1.], [2.]]));
+    assert_approx_eq!(Mat1x3([[1., 2., 3.]]).transpose(), Mat3x1([[1.], [2.], [3.]]));
+    assert_approx_eq!(Mat1x4([[1., 2., 3., 4.]]).transpose(), Mat4x1([[1.], [2.], [3.], [4.]]));
+    assert_approx_eq!(Mat2x1([[1.], [2.]]).transpose(), Mat1x2([[1., 2.]]));
+    assert_approx_eq!(Mat2x2([[1., 2.], [3., 4.]]).transpose(), Mat2x2([[1., 3.], [2., 4.]]));
+    assert_approx_eq!(Mat2x3([[1., 2., 3.], [4., 5., 6.]]).transpose(),
                Mat3x2([[1., 4.], [2., 5.], [3., 6.]]));
-    assert_eq!(Mat2x4([[1., 2., 3., 4.], [5., 6., 7., 8.]]).transpose(),
+    assert_approx_eq!(Mat2x4([[1., 2., 3., 4.], [5., 6., 7., 8.]]).transpose(),
                Mat4x2([[1., 5.], [2., 6.], [3., 7.], [4., 8.]]));
-    assert_eq!(Mat3x1([[1.], [2.], [3.]]).transpose(), Mat1x3([[1., 2., 3.]]));
-    assert_eq!(Mat3x2([[1., 2.], [3., 4.], [5., 6.]]).transpose(),
+    assert_approx_eq!(Mat3x1([[1.], [2.], [3.]]).transpose(), Mat1x3([[1., 2., 3.]]));
+    assert_approx_eq!(Mat3x2([[1., 2.], [3., 4.], [5., 6.]]).transpose(),
                Mat2x3([[1., 3., 5.], [2., 4., 6.]]));
-    assert_eq!(Mat3x3([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]).transpose(),
+    assert_approx_eq!(Mat3x3([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]).transpose(),
                Mat3x3([[1., 4., 7.], [2., 5., 8.], [3., 6., 9.]]));
-    assert_eq!(Mat3x4([[1., 2., 3., 4.], [5., 6., 7., 8.], [9., 10., 11., 12.]]).transpose(),
+    assert_approx_eq!(Mat3x4([[1., 2., 3., 4.], [5., 6., 7., 8.], [9., 10., 11., 12.]]).transpose(),
                Mat4x3([[1., 5., 9.], [2., 6., 10.], [3., 7., 11.], [4., 8., 12.]]));
-    assert_eq!(Mat4x1([[1.], [2.], [3.], [4.]]).transpose(), Mat1x4([[1., 2., 3., 4.]]));
-    assert_eq!(Mat4x2([[1., 2.], [3., 4.], [5., 6.], [7., 8.]]).transpose(),
+    assert_approx_eq!(Mat4x1([[1.], [2.], [3.], [4.]]).transpose(), Mat1x4([[1., 2., 3., 4.]]));
+    assert_approx_eq!(Mat4x2([[1., 2.], [3., 4.], [5., 6.], [7., 8.]]).transpose(),
                Mat2x4([[1., 3., 5., 7.], [2., 4., 6., 8.]]));
-    assert_eq!(Mat4x3([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.], [10., 11., 12.]]).transpose(),
+    assert_approx_eq!(Mat4x3([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.], [10., 11., 12.]]).transpose(),
                Mat3x4([[1., 4., 7., 10.], [2., 5., 8., 11.], [3., 6., 9., 12.]]));
-    assert_eq!(Mat4x4([[ 1.,  2.,  3.,  4.],
+    assert_approx_eq!(Mat4x4([[ 1.,  2.,  3.,  4.],
                        [ 5.,  6.,  7.,  8.],
                        [ 9., 10., 11., 12.],
                        [13., 14., 15., 16.]]).transpose(),
@@ -77,7 +77,7 @@ fn transpose_special_case() {
 
 #[test]
 fn transpose_general_case() {
-    assert_eq!(
+    assert_approx_eq!(
         Mat5x8([[ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.],
                 [ 9., 10., 11., 12., 13., 14., 15., 16.],
                 [17., 18., 19., 20., 21., 22., 23., 24.],

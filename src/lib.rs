@@ -29,38 +29,38 @@ macro_rules! behemoth {
             () => ();
         }
 
-        lazy_single_use! {
-            _use_Add => ( use std::ops::Add; );
-            _use_AddAssign => ( use std::ops::AddAssign; );
-            _use_Sub => ( use std::ops::Sub; );
-            _use_SubAssign => ( use std::ops::SubAssign; );
-            _use_Mul => ( use std::ops::Mul; );
-            _use_MulAssign => ( use std::ops::MulAssign; );
-            _use_Div => ( use std::ops::Div; );
-            _use_DivAssign => ( use std::ops::DivAssign; );
-            _use_Neg => ( use std::ops::Neg; );
-            _use_Deref => ( use std::ops::Deref; );
-            _use_DerefMut => ( use std::ops::DerefMut; );
-            _use_Index => ( use std::ops::Index; );
-            _use_IndexMut => ( use std::ops::IndexMut; );
-
-            _use_One => ( use $crate::One; );
-            _use_Zero => ( use $crate::Zero; );
-
-            _use_Field => ( use $crate::Field; );
-
-            _use_Matrix => ( use $crate::Matrix; );
-            _use_Square => ( use $crate::Square; );
-            _use_Transpose => (use $crate::Transpose; );
-
-            _use_Vector => ( use $crate::Vector; );
-            _use_Cross => ( use $crate::Cross; );
-            _use_Dot => ( use $crate::Dot; );
-            _use_Metric => ( use $crate::Metric; );
-            _use_Norm => ( use $crate::Norm; );
-        }
-
         mod __behemoth {
+            #[allow(unused_imports)] use std::ops::Add;
+            #[allow(unused_imports)] use std::ops::AddAssign;
+            #[allow(unused_imports)] use std::ops::Sub;
+            #[allow(unused_imports)] use std::ops::SubAssign;
+            #[allow(unused_imports)] use std::ops::Mul;
+            #[allow(unused_imports)] use std::ops::MulAssign;
+            #[allow(unused_imports)] use std::ops::Div;
+            #[allow(unused_imports)] use std::ops::DivAssign;
+            #[allow(unused_imports)] use std::ops::Neg;
+            #[allow(unused_imports)] use std::ops::Deref;
+            #[allow(unused_imports)] use std::ops::DerefMut;
+            #[allow(unused_imports)] use std::ops::Index;
+            #[allow(unused_imports)] use std::ops::IndexMut;
+
+            #[allow(unused_imports)] use $crate::One;
+            #[allow(unused_imports)] use $crate::Zero;
+
+            #[allow(unused_imports)] use $crate::Field;
+
+            #[allow(unused_imports)] use $crate::Matrix;
+            #[allow(unused_imports)] use $crate::Square;
+            #[allow(unused_imports)] use $crate::Transpose;
+
+            #[allow(unused_imports)] use $crate::Vector;
+            #[allow(unused_imports)] use $crate::Cross;
+            #[allow(unused_imports)] use $crate::Dot;
+            #[allow(unused_imports)] use $crate::Metric;
+            #[allow(unused_imports)] use $crate::Norm;
+
+            #[allow(unused_imports)] use $crate::ApproxEq;
+
             as_items! {
                 $($stuff)*
             }
