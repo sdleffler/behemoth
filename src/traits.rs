@@ -39,7 +39,7 @@ pub trait Matrix: Add<Output=Self> + AddAssign
 
 pub trait Transpose: Matrix where
         <Self as Matrix>::Scalar: Mul<Self::Transpose, Output=Self::Transpose> {
-    type Transpose: Matrix<Scalar=Self::Scalar>;
+    type Transpose: Matrix<Scalar=Self::Scalar> + Transpose<Transpose=Self>;
 
     fn transpose(&self) -> Self::Transpose;
 }
