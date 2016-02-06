@@ -18,8 +18,6 @@ pub mod scalar;
 mod traits;
 pub use traits::*;
 
-pub struct BlackHole<T>(T); // Swallow anything whole.
-
 macro_rules! _behemoth_in_wrapper_check {
     () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
 }
@@ -45,8 +43,6 @@ macro_rules! behemoth {
             _use_DerefMut => ( use std::ops::DerefMut; );
             _use_Index => ( use std::ops::Index; );
             _use_IndexMut => ( use std::ops::IndexMut; );
-
-            _use_BlackHole => ( use $crate::BlackHole; );
 
             _use_One => ( use $crate::One; );
             _use_Zero => ( use $crate::Zero; );
