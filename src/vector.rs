@@ -610,11 +610,11 @@ macro_rules! euclidean {
                 }
             }
 
-            _use_InnerProduct!();
+            _use_Dot!();
             _use_Norm!();
             _use_Metric!();
 
-            impl InnerProduct for $name {
+            impl Dot for $name {
                 fn dot(self, other: $name) -> $t {
                     _sum!($(self.$e * other.$e),*)
                 }

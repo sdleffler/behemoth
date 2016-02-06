@@ -72,7 +72,7 @@ pub trait Cross<Rhs=Self> {
     fn cross(self, Rhs) -> Self::Perpendicular;
 }
 
-pub trait InnerProduct: Vector {
+pub trait Dot: Vector {
     fn dot(self, Self) -> Self::Scalar;
 }
 
@@ -82,8 +82,8 @@ pub trait Metric {
     fn distance(self, Self) -> Self::Distance;
 }
 
-pub trait Norm {
-    type Length;
+pub trait Norm: Vector {
+    type Length; // FIXME: Need some way to represent the real numbers (Length must always be real)
 
     fn length(self) -> Self::Length;
 }

@@ -59,7 +59,7 @@ macro_rules! behemoth {
 
             _use_Vector => ( use $crate::Vector; );
             _use_Cross => ( use $crate::Cross; );
-            _use_InnerProduct => ( use $crate::InnerProduct; );
+            _use_Dot => ( use $crate::Dot; );
             _use_Metric => ( use $crate::Metric; );
             _use_Norm => ( use $crate::Norm; );
         }
