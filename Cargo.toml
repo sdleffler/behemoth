@@ -4,8 +4,7 @@ version = "0.3.1"
 authors = ["Sean Leffler <sean@errno.com>"]
 
 [features]
-default = ["lowdim_special_cases", "matrix_rand", "vector_rand"]
-lowdim_special_cases = []
+default = ["matrix_rand", "vector_rand"]
 matrix_rand = ["rand"]
 vector_rand = ["rand"]
 
