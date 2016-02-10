@@ -180,115 +180,6 @@ macro_rules! _matrix_id_impl {
 }
 
 #[macro_export]
-macro_rules! _matrix_transpose_impl {
-    (1, 1, $s:ident) => (
-        _matrix!(1, 1)([[$s[0][0]]])
-    );
-    (1, 2, $s:ident) => (
-        _matrix!(2, 1)([[$s[0][0]],
-                        [$s[0][1]]])
-    );
-    (1, 3, $s:ident) => (
-        _matrix!(3, 1)([[$s[0][0]],
-                        [$s[0][1]],
-                        [$s[0][2]]])
-    );
-    (1, 4, $s:ident) => (
-        _matrix!(4, 1)([[$s[0][0]],
-                        [$s[0][1]],
-                        [$s[0][2]],
-                        [$s[0][3]]])
-    );
-    (2, 1, $s:ident) => (
-        _matrix!(1, 2)([[$s[0][0], $s[1][0]]])
-    );
-    (2, 2, $s:ident) => (
-        _matrix!(2, 2)(
-            [[$s[0][0], $s[1][0]],
-             [$s[0][1], $s[1][1]]]
-        )
-    );
-    (2, 3, $s:ident) => (
-        _matrix!(3, 2)(
-            [[$s[0][0], $s[1][0]],
-             [$s[0][1], $s[1][1]],
-             [$s[0][2], $s[1][2]]]
-        )
-    );
-    (2, 4, $s:ident) => (
-        _matrix!(4, 2)(
-            [[$s[0][0], $s[1][0]],
-             [$s[0][1], $s[1][1]],
-             [$s[0][2], $s[1][2]],
-             [$s[0][3], $s[1][3]]]
-        )
-    );
-    (3, 1, $s:ident) => (
-        _matrix!(1, 3)(
-            [[$s[0][0], $s[1][0], $s[2][0]]]
-        )
-    );
-    (3, 2, $s:ident) => (
-        _matrix!(2, 3)(
-            [[$s[0][0], $s[1][0], $s[2][0]],
-             [$s[0][1], $s[1][1], $s[2][1]]]
-        )
-    );
-    (3, 3, $s:ident) => (
-        _matrix!(3, 3)(
-            [[$s[0][0], $s[1][0], $s[2][0]],
-             [$s[0][1], $s[1][1], $s[2][1]],
-             [$s[0][2], $s[1][2], $s[2][2]]]
-        )
-    );
-    (3, 4, $s:ident) => (
-        _matrix!(4, 3)(
-            [[$s[0][0], $s[1][0], $s[2][0]],
-             [$s[0][1], $s[1][1], $s[2][1]],
-             [$s[0][2], $s[1][2], $s[2][2]],
-             [$s[0][3], $s[1][3], $s[2][3]]]
-        )
-    );
-    (4, 1, $s:ident) => (
-        _matrix!(1, 4)(
-            [[$s[0][0], $s[1][0], $s[2][0], $s[3][0]]]
-        )
-    );
-    (4, 2, $s:ident) => (
-        _matrix!(2, 4)(
-            [[$s[0][0], $s[1][0], $s[2][0], $s[3][0]],
-             [$s[0][1], $s[1][1], $s[2][1], $s[3][1]]]
-        )
-    );
-    (4, 3, $s:ident) => (
-        _matrix!(3, 4)(
-            [[$s[0][0], $s[1][0], $s[2][0], $s[3][0]],
-             [$s[0][1], $s[1][1], $s[2][1], $s[3][1]],
-             [$s[0][2], $s[1][2], $s[2][2], $s[3][2]]]
-        )
-    );
-    (4, 4, $s:ident) => (
-        _matrix!(4, 4)(
-            [[$s[0][0], $s[1][0], $s[2][0], $s[3][0]],
-             [$s[0][1], $s[1][1], $s[2][1], $s[3][1]],
-             [$s[0][2], $s[1][2], $s[2][2], $s[3][2]],
-             [$s[0][3], $s[1][3], $s[2][3], $s[3][3]]]
-        )
-    );
-    ($rows:tt, $cols:tt, $s:ident) => (
-        {
-            let mut out = <_matrix!($cols, $rows) as Zero>::ZERO;
-            for (i, row) in $s.iter().enumerate() {
-                for (j, &elem) in row.iter().enumerate() {
-                    out[j][i] = elem;
-                }
-            }
-            out
-        }
-    );
-}
-
-#[macro_export]
 macro_rules! _matrix_synonym_space_impl {
     (
         @outer
@@ -511,18 +402,11 @@ macro_rules! matrices {
                             type Transpose = _matrix!($cols, $rows);
 
                             #[inline]
-                            #[cfg(not(feature = "no_special_cases"))]
-                            fn transpose(&self) -> Self::Transpose {
-                                _matrix_transpose_impl!($rows, $cols, self)
-                            }
-
-                            #[inline]
-                            #[cfg(feature = "no_special_cases")]
                             fn transpose(&self) -> Self::Transpose {
                                 let mut out = <Self::Transpose as Zero>::ZERO;
                                 for (i, row) in self.iter().enumerate() {
-                                    for (j, &elem) in row.iter().enumerate() {
-                                        out[j][i] = elem;
+                                    for (j, elem) in row.iter().enumerate() {
+                                        out[j][i] = *elem;
                                     }
                                 }
                                 out
