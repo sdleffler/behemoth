@@ -47,6 +47,11 @@ fn det_special_case() {
     assert_approx_eq!(Mat1x1([[5.]]).determinant(), 5.);
     assert_approx_eq!(Mat2x2([[2., 3.], [4., 1.]]).determinant(), -10.);
     assert_approx_eq!(Mat3x3([[7., 6., 5.], [4., 8., 4.], [10., 8., 2.]]).determinant(), -160.);
+    assert_approx_eq!(
+        Mat4x4([[ 1.,  3.,  2., -4.],
+                [-5., -2.,  3.,  5.],
+                [-5.,  1., -3.,  0.],
+                [-5.,  4.,  1., -4.]]).determinant(), 83.);
 }
 
 #[test]

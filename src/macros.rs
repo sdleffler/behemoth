@@ -1,7 +1,9 @@
 #[macro_export]
 macro_rules! assert_approx_eq {
     ($lhs:expr, $rhs:expr) => (
-        assert!($lhs.approx_eq(&$rhs));
+        if $lhs.approx_ne(&$rhs) {
+            panic!(format!("assert_approx_eq failed: {:?} != {:?}", $lhs, $rhs));
+        }
     );
 }
 
