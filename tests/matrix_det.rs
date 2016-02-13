@@ -43,25 +43,25 @@ behemoth! {
 
 #[test]
 fn det_special_case() {
-    assert_approx_eq!(Mat1x1([[5.]]).determinant(), 5.);
-    assert_approx_eq!(Mat2x2([[2., 3.], [4., 1.]]).determinant(), -10.);
-    assert_approx_eq!(Mat3x3([[7., 6., 5.], [4., 8., 4.], [10., 8., 2.]]).determinant(), -160.);
+    assert_approx_eq!(Mat1x1::new([[5.]]).determinant(), 5.);
+    assert_approx_eq!(Mat2x2::new([[2., 3.], [4., 1.]]).determinant(), -10.);
+    assert_approx_eq!(Mat3x3::new([[7., 6., 5.], [4., 8., 4.], [10., 8., 2.]]).determinant(), -160.);
     assert_approx_eq!(
-        Mat4x4([[ 1.,  3.,  2., -4.],
-                [-5., -2.,  3.,  5.],
-                [-5.,  1., -3.,  0.],
-                [-5.,  4.,  1., -4.]]).determinant(), 83.);
+        Mat4x4::new([[ 1.,  3.,  2., -4.],
+                    [-5., -2.,  3.,  5.],
+                    [-5.,  1., -3.,  0.],
+                    [-5.,  4.,  1., -4.]]).determinant(), 83.);
 }
 
 #[test]
 fn det_general_case() {
     assert_approx_eq!(
-        Mat6x6([[1., 5., 2., 5., 5., 3.],
-                [2., 4., 3., 5., 2., 3.],
-                [1., 1., 1., 1., 1., 1.],
-                [1., 2., 3., 5., 5., 3.],
-                [2., 5., 3., 2., 2., 5.],
-                [5., 5., 2., 4., 4., 4.]]).determinant(),
+        Mat6x6::new([[1., 5., 2., 5., 5., 3.],
+                    [2., 4., 3., 5., 2., 3.],
+                    [1., 1., 1., 1., 1., 1.],
+                    [1., 2., 3., 5., 5., 3.],
+                    [2., 5., 3., 2., 2., 5.],
+                    [5., 5., 2., 4., 4., 4.]]).determinant(),
         225.
     );
 }

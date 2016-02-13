@@ -75,6 +75,15 @@ macro_rules! behemoth {
             #[cfg(feature = "as_mathematica")]
             use $crate::AsMathematica;
 
+            #[derive(Clone, Copy, Debug)]
+            pub struct DenseMatrix<T>(T);
+
+            impl<T> DenseMatrix<T> {
+                pub fn new(data: T) -> DenseMatrix<T> {
+                    DenseMatrix(data)
+                }
+            }
+
             as_items! {
                 $($stuff)*
             }

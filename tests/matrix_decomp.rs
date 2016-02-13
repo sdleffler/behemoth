@@ -20,7 +20,7 @@ behemoth! {
 
 #[test]
 fn lup_3x3() {
-    let a = Mat3x3([
+    let a = Mat3x3::new([
         [2.,  1.,  3.],
         [5., 2.5,  4.],
         [1.,  2., 0.5]]);

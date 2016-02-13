@@ -51,7 +51,7 @@ macro_rules! _matrices_auto_mul_impls {
 
                     #[inline]
                     fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
-                        _matrix!($brows, $ccols)(_matrix_mul_impl!([$brows => $bcols => $ccols] self, rhs, $scalar))
+                        _matrix_new!($brows, $ccols)(_matrix_mul_impl!([$brows => $bcols => $ccols] self, rhs, $scalar))
                     }
                 }
             } else {}
@@ -133,14 +133,14 @@ macro_rules! _matrix_det_impl {
 #[macro_export]
 macro_rules! _matrix_id_impl {
     (1, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as One>::ONE]])
+        $matrix::new([[<$scalar as One>::ONE]])
     );
     (2, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as One>::ONE, <$scalar as Zero>::ZERO],
+        $matrix::new([[<$scalar as One>::ONE, <$scalar as Zero>::ZERO],
                  [<$scalar as Zero>::ZERO, <$scalar as One>::ONE]])
     );
     (3, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as One>::ONE,
+        $matrix::new([[<$scalar as One>::ONE,
                   <$scalar as Zero>::ZERO,
                   <$scalar as Zero>::ZERO],
                  [<$scalar as Zero>::ZERO,
@@ -151,7 +151,7 @@ macro_rules! _matrix_id_impl {
                   <$scalar as One>::ONE]])
     );
     (4, $matrix:ident, $scalar:ty) => (
-        $matrix([[<$scalar as One>::ONE,
+        $matrix::new([[<$scalar as One>::ONE,
                   <$scalar as Zero>::ZERO,
                   <$scalar as Zero>::ZERO,
                   <$scalar as Zero>::ZERO],
@@ -345,6 +345,12 @@ macro_rules! matrices {
             )+
         }
 
+        macro_rules! _matrix_new {
+            $(
+                ($rows, $cols) => ($tyname::new);
+            )+
+        }
+
         macro_rules! _matrix_synonym_check {
             $(
                 ($rows, $cols) => (_matrix_synonym_impl!(););
@@ -377,16 +383,14 @@ macro_rules! matrices {
 
         $(
             as_items! {
-                #[derive(Clone, Copy, Debug, PartialEq)]
-                pub struct $tyname (pub [[$scalar; $cols]; $rows]);
+                pub type $tyname = DenseMatrix<[[$scalar; $cols]; $rows]>;
+
+                //#[derive(Clone, Copy, Debug, PartialEq)]
+                //pub struct $tyname (pub [[$scalar; $cols]; $rows]);
 
                 impl $tyname {
                     const ROWS: usize = $rows;
                     const COLS: usize = $cols;
-
-                    #[inline]
-                    #[allow(dead_code)]
-                    pub fn new(data: [[$scalar; $cols]; $rows]) -> $tyname { $tyname(data) }
                 }
 
                 impl AsMathematica for $tyname {
@@ -715,7 +719,7 @@ macro_rules! matrices {
                 }
 
                 impl Zero for $tyname {
-                    const ZERO: $tyname = $tyname(
+                    const ZERO: $tyname = DenseMatrix::<[[$scalar; $cols]; $rows]>(
                         [[<$scalar as Zero>::ZERO; $cols]; $rows]
                     );
                 }
