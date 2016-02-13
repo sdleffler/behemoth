@@ -24,37 +24,10 @@ pub trait Field: Add<Output=Self>
                + Div<Output=Self>
                + Neg<Output=Self>
                + Zero
-               + One {}
-
-pub trait Matrix: Add<Output=Self> + AddAssign
-                + Sub<Output=Self> + SubAssign
-                + Mul<<Self as Matrix>::Scalar, Output=Self> + MulAssign<<Self as Matrix>::Scalar>
-                + Div<<Self as Matrix>::Scalar, Output=Self> + DivAssign<<Self as Matrix>::Scalar>
-                + Neg<Output=Self>
-                + Zero {
-    type Scalar: Field + Mul<Self, Output=Self>;
-
-    fn dimensions(&self) -> (usize, usize);
-}
-
-pub trait Transpose: Matrix where
-        <Self as Matrix>::Scalar: Mul<Self::Transpose, Output=Self::Transpose> {
-    type Transpose: Matrix<Scalar=Self::Scalar> + Transpose<Transpose=Self>;
-
-    fn transpose(&self) -> Self::Transpose;
-}
-
-pub trait Square: Matrix
-                + Transpose<Transpose=Self>
-                + Mul<Output=Self>
-                + MulAssign {
-
-    fn identity() -> Self;
-
-    fn determinant(&self) -> Self::Scalar { unimplemented!(); }
-
-    fn transpose_mut(&mut self);
-}
+               + One
+               + PartialOrd
+               + PartialEq
+               + Copy {}
 
 pub trait Vector: Add<Output=Self> + AddAssign
                 + Sub<Output=Self> + SubAssign

@@ -10,6 +10,8 @@ use test::Bencher;
 
 #[macro_use] extern crate behemoth;
 
+use behemoth::decomp::lup;
+
 behemoth! {
     matrices! {
         f64: {
@@ -22,21 +24,19 @@ behemoth! {
 }
 
 #[bench]
-fn bench_mul_square_2x2(b: &mut Bencher) {
+fn bench_lup_2x2(b: &mut Bencher) {
     let mut mat = Mat2x2::new([
             [8., 2.],
             [4., 3.],
         ]);
 
     b.iter(|| {
-        mat = test::black_box(mat) * mat;
+        lup(test::black_box(mat))
     });
-
-    test::black_box(mat);
 }
 
 #[bench]
-fn bench_mul_square_3x3(b: &mut Bencher) {
+fn bench_lup_3x3(b: &mut Bencher) {
     let mut mat = Mat3x3::new([
             [8., 2., 6.],
             [4., 3., 5.],
@@ -44,14 +44,14 @@ fn bench_mul_square_3x3(b: &mut Bencher) {
         ]);
 
     b.iter(|| {
-        mat = test::black_box(mat) * mat;
+        lup(test::black_box(mat))
     });
 
     test::black_box(mat);
 }
 
 #[bench]
-fn bench_mul_square_4x4(b: &mut Bencher) {
+fn bench_lup_4x4(b: &mut Bencher) {
     let mut mat = Mat4x4::new([
             [8.,  2.,  6., 11.],
             [4.,  3.,  5., -5.],
@@ -60,14 +60,14 @@ fn bench_mul_square_4x4(b: &mut Bencher) {
         ]);
 
     b.iter(|| {
-        mat = test::black_box(mat) * mat;
+        lup(test::black_box(mat))
     });
 
     test::black_box(mat);
 }
 
 #[bench]
-fn bench_mul_square_5x5(b: &mut Bencher) {
+fn bench_lup_5x5(b: &mut Bencher) {
     let mut mat = Mat5x5::new([
             [8.,  2.,  6., 11., 3.],
             [4.,  3.,  5., -5., 0.],
@@ -77,7 +77,7 @@ fn bench_mul_square_5x5(b: &mut Bencher) {
         ]);
 
     b.iter(|| {
-        mat = test::black_box(mat) * mat;
+        lup(test::black_box(mat))
     });
 
     test::black_box(mat);

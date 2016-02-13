@@ -8,7 +8,10 @@ impl<T> Field for T where T: Add<Output=T>
                            + Div<Output=T>
                            + Neg<Output=T>
                            + Zero
-                           + One {}
+                           + One
+                           + PartialOrd
+                           + PartialEq
+                           + Copy {}
 
 macro_rules! impl_add_mul_identities {
     ($({ zero: $zero:expr, one: $one:expr, { $($t:ty)* } })*) => (

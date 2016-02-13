@@ -4,7 +4,8 @@ version = "0.3.1"
 authors = ["Sean Leffler <sean@errno.com>"]
 
 [features]
-default = ["matrix_rand", "vector_rand"]
+default = ["as_mathematica", "matrix_rand", "vector_rand"]
+as_mathematica = []
 matrix_rand = ["rand"]
 vector_rand = ["rand"]
 

@@ -389,11 +389,154 @@ macro_rules! matrices {
                     pub fn new(data: [[$scalar; $cols]; $rows]) -> $tyname { $tyname(data) }
                 }
 
+                impl AsMathematica for $tyname {
+                    fn as_mathematica(&self) -> String {
+                        fn push_row(string: &mut String, row: &[$scalar]) {
+                            let mut elems = row.iter();
+                            string.push_str(&format!("{{ {:?}", elems.next().unwrap()));
+                            for e in elems {
+                                string.push_str(&format!(", {:?}", e));
+                            }
+                            string.push_str(" }");
+                        }
+
+                        let mut string = String::from("{");
+                        let mut rows = self.iter();
+                        push_row(&mut string, rows.next().unwrap());
+                        for row in rows {
+                            string.push_str(", ");
+                            push_row(&mut string, row);
+                        }
+                        string.push_str("}");
+                        string
+                    }
+                }
+
                 impl Matrix for $tyname {
                     type Scalar = $scalar;
 
                     #[inline]
                     fn dimensions(&self) -> (usize, usize) { (Self::ROWS, Self::COLS) }
+
+                    #[inline]
+                    fn row_switch(mut self, i: usize, j: usize) -> Self {
+                        self.0.swap(i, j);
+                        self
+                    }
+
+                    #[inline]
+                    fn row_mul(mut self, i: usize, m: Self::Scalar) -> Self {
+                        for e in self[i].iter_mut() {
+                            *e *= m;
+                        }
+                        self
+                    }
+
+                    #[inline]
+                    fn row_add(mut self, i:usize, j: usize, m: Self::Scalar) -> Self {
+                        for k in 0..Self::COLS {
+                            self[i][k] += self[j][k] * m;
+                        }
+                        self
+                    }
+
+                    #[inline]
+                    fn col_switch(mut self, i: usize, j: usize) -> Self {
+                        for row in self.iter_mut() {
+                            row.swap(i, j);
+                        }
+                        self
+                    }
+
+                    #[inline]
+                    fn col_mul(mut self, i: usize, m: Self::Scalar) -> Self {
+                        for e in self.iter_mut() {
+                            e[i] *= m;
+                        }
+                        self
+                    }
+
+                    #[inline]
+                    fn col_add(mut self, i:usize, j: usize, m: Self::Scalar) -> Self {
+                        for row in self.iter_mut() {
+                            row[i] += row[j] * m;
+                        }
+                        self
+                    }
+
+                    #[inline]
+                    fn row_switch_mut(&mut self, i: usize, j: usize) {
+                        self.0.swap(i, j);
+                    }
+
+                    #[inline]
+                    fn row_mul_mut(&mut self, i: usize, m: Self::Scalar) {
+                        for e in self[i].iter_mut() {
+                            *e *= m;
+                        }
+                    }
+
+                    #[inline]
+                    fn row_add_mut(&mut self,  i: usize, j: usize, m: Self::Scalar) {
+                        for k in 0..Self::COLS {
+                            self[i][k] += self[j][k] * m;
+                        }
+                    }
+
+                    #[inline]
+                    fn col_switch_mut(&mut self, i: usize, j: usize) {
+                        for row in self.iter_mut() {
+                            row.swap(i, j);
+                        }
+                    }
+
+                    #[inline]
+                    fn col_mul_mut(&mut self, i: usize, m: Self::Scalar) {
+                        for e in self.iter_mut() {
+                            e[i] *= m;
+                        }
+                    }
+
+                    #[inline]
+                    fn col_add_mut(&mut self, i:usize, j: usize, m: Self::Scalar) {
+                        for row in self.iter_mut() {
+                            row[i] += row[j] * m;
+                        }
+                    }
+                }
+
+                impl Index<usize> for $tyname {
+                    type Output = [$scalar; $cols];
+
+                    #[inline(always)]
+                    fn index(&self, idx: usize) -> &[$scalar; $cols] {
+                        &self.0[idx]
+                    }
+                }
+
+                impl IndexMut<usize> for $tyname {
+                    #[inline(always)]
+                    fn index_mut(&mut self, idx: usize) -> &mut [$scalar; $cols] {
+                        &mut self.0[idx]
+                    }
+                }
+
+                impl Index<(usize, usize)> for $tyname {
+                    type Output = $scalar;
+
+                    #[inline(always)]
+                    fn index(&self, idx: (usize, usize)) -> &$scalar {
+                        let (row, col) = idx;
+                        &self[row][col]
+                    }
+                }
+
+                impl IndexMut<(usize, usize)> for $tyname {
+                    #[inline(always)]
+                    fn index_mut(&mut self, idx: (usize, usize)) -> &mut $scalar {
+                        let (row, col) = idx;
+                        &mut self[row][col]
+                    }
                 }
 
                 macro_rules! _matrix_isdef {
@@ -599,6 +742,11 @@ macro_rules! matrices {
             is_eq! {
                 if ($rows) == ($cols) {
                     impl Square for $tyname {
+                        #[inline]
+                        fn order(&self) -> usize {
+                            $rows
+                        }
+
                         #[inline]
                         #[cfg(not(feature = "no_special_cases"))]
                         fn identity() -> $tyname {

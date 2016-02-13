@@ -8,14 +8,22 @@
 #[cfg(any(feature = "matrix_rand", feature = "vector_rand"))]
 extern crate rand;
 
-#[macro_use] mod macros;
+#[macro_use]
+mod macros;
+#[macro_use]
+pub mod matrix;
+#[macro_use]
+pub mod vector;
 
-#[macro_use] pub mod matrix;
-#[macro_use] pub mod vector;
+mod traits;
+
+#[cfg(feature = "as_mathematica")]
+pub mod mathematica;
 
 pub mod scalar;
 
-mod traits;
+pub use mathematica::*;
+pub use matrix::*;
 pub use traits::*;
 
 macro_rules! _behemoth_in_wrapper_check {
@@ -30,6 +38,8 @@ macro_rules! behemoth {
         }
 
         mod __behemoth {
+            #[allow(unused_imports)] use std::slice::Iter;
+
             #[allow(unused_imports)] use std::ops::Add;
             #[allow(unused_imports)] use std::ops::AddAssign;
             #[allow(unused_imports)] use std::ops::Sub;
@@ -60,6 +70,10 @@ macro_rules! behemoth {
             #[allow(unused_imports)] use $crate::Norm;
 
             #[allow(unused_imports)] use $crate::ApproxEq;
+
+            #[allow(unused_imports)]
+            #[cfg(feature = "as_mathematica")]
+            use $crate::AsMathematica;
 
             as_items! {
                 $($stuff)*
