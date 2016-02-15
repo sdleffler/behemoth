@@ -1,6 +1,6 @@
 use matrix::{Matrix, Square};
 
-pub fn lup<M>(a: M) -> (M, M, M) where M: Matrix + Square {
+pub fn lu<M>(a: M) -> (M, M, M) where M: Matrix + Square {
     let mut l = M::identity();
     let mut u = a;
     let mut p = M::identity();

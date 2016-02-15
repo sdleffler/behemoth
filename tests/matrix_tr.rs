@@ -3,6 +3,7 @@
 #![feature(op_assign_traits)]
 #![feature(type_macros)]
 #![feature(log_syntax)]
+#![feature(unsize)]
 
 #[macro_use] extern crate behemoth;
 use behemoth::{ApproxEq, Transpose};

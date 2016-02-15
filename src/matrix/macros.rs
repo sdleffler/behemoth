@@ -47,11 +47,12 @@ macro_rules! _matrices_auto_mul_impls {
         is_eq! {
             if ($crows) == ($bcols) {
                 impl Mul<$cty> for $bty {
-                    type Output = _matrix!($brows, $ccols);
+                    type Output = DenseMatrix<[[$scalar; $ccols]; $brows], [$scalar; $ccols], $scalar>;
 
                     #[inline]
-                    fn mul(self, rhs: $cty) -> _matrix!($brows, $ccols) {
-                        _matrix_new!($brows, $ccols)(_matrix_mul_impl!([$brows => $bcols => $ccols] self, rhs, $scalar))
+                    fn mul(self, rhs: $cty) -> Self::Output {
+                        Self::Output::new(
+                            _matrix_mul_impl!([$brows => $bcols => $ccols] self, rhs, $scalar))
                     }
                 }
             } else {}
@@ -202,16 +203,16 @@ macro_rules! _matrix_synonym_space_impl {
         as_items! {
             macro_rules! _matrix_synonym_impl {
                 () => (
-                    impl From<$lsyn> for _matrix!(1, $ldims) {
+                    impl From<$lsyn> for DenseMatrix<[[$scalar; $ldims]; 1], [$scalar; $ldims], $scalar> {
                         #[inline]
                         fn from(vec: $lsyn) -> Self {
-                            _matrix!(1, $ldims)([vec.into()])
+                            Self::new([vec.into()])
                         }
                     }
 
-                    impl From<_matrix!(1, $ldims)> for $lsyn {
+                    impl From<DenseMatrix<[[$scalar; $ldims]; 1], [$scalar; $ldims], $scalar>> for $lsyn {
                         #[inline]
-                        fn from(mat: _matrix!(1, $ldims)) -> Self {
+                        fn from(mat: DenseMatrix<[[$scalar; $ldims]; 1], [$scalar; $ldims], $scalar>) -> Self {
                             <$lsyn as From<[[$scalar; $ldims]; 1]>>::from(mat.0)
                         }
                     }
@@ -221,16 +222,16 @@ macro_rules! _matrix_synonym_space_impl {
 
             macro_rules! _matrix_synonym_impl {
                 () => (
-                    impl From<$lsyn> for _matrix!($ldims, 1) {
+                    impl From<$lsyn> for DenseMatrix<[[$scalar; 1]; $ldims], [$scalar; 1], $scalar> {
                         #[inline]
                         fn from(vec: $lsyn) -> Self {
-                            _matrix!($ldims, 1)(vec.into())
+                            Self::new(vec.into())
                         }
                     }
 
-                    impl From<_matrix!($ldims, 1)> for $lsyn {
+                    impl From<DenseMatrix<[[$scalar; 1]; $ldims], [$scalar; 1], $scalar>> for $lsyn {
                         #[inline]
-                        fn from(mat: _matrix!($ldims, 1)) -> Self {
+                        fn from(mat: DenseMatrix<[[$scalar; 1]; $ldims], [$scalar; 1], $scalar>) -> Self {
                             <$lsyn as From<[[$scalar; 1]; $ldims]>>::from(mat.0)
                         }
                     }
@@ -240,10 +241,10 @@ macro_rules! _matrix_synonym_space_impl {
 
             macro_rules! _matrix_synonym_impl {
                 () => (
-                    impl From<$lsyn> for _matrix!($ldims, $ldims) {
+                    impl From<$lsyn> for DenseMatrix<[[$scalar; $ldims]; $ldims], [$scalar; $ldims], $scalar> {
                         #[inline]
                         fn from(vec: $lsyn) -> Self {
-                            <_matrix!($ldims, $ldims) as From<[$scalar; $ldims]>>::from(vec.into())
+                            <Self as From<[$scalar; $ldims]>>::from(vec.into())
                         }
                     }
                 );
@@ -267,7 +268,7 @@ macro_rules! _matrix_synonym_space_impl {
                 () => (
                     n_pairs_are_eq! {
                         if ($ldims) == ($mcols) && ($mrows) == ($rdims) {
-                            impl Mul<$lsyn> for _matrix!($mrows, $mcols) {
+                            impl Mul<$lsyn> for DenseMatrix<[[$scalar; $mcols]; $mrows], [$scalar; $mcols], $scalar> {
                                 type Output = $rsyn;
 
                                 #[inline]
@@ -283,11 +284,11 @@ macro_rules! _matrix_synonym_space_impl {
 
                     n_pairs_are_eq! {
                         if ($ldims) == ($mrows) && ($mcols) == ($rdims) {
-                            impl Mul<_matrix!($mrows, $mcols)> for $lsyn {
+                            impl Mul<DenseMatrix<[[$scalar; $mcols]; $mrows], [$scalar; $mcols], $scalar>> for $lsyn {
                                 type Output = $rsyn;
 
                                 #[inline]
-                                fn mul(self, rhs: _matrix!($mrows, $mcols)) -> $rsyn {
+                                fn mul(self, rhs: DenseMatrix<[[$scalar; $mcols]; $mrows], [$scalar; $mcols], $scalar>) -> $rsyn {
                                     let arr: [[$scalar; $ldims]; 1] = self.into();
                                     <$rsyn as From<[[$scalar; $rdims]; 1]>>::from(
                                         _matrix_mul_impl!([1 => $mrows => $mcols]
@@ -313,7 +314,14 @@ macro_rules! _matrix_traitswitch {
         macro_rules! _matrix_approxeq_call { () => (); }
     );
     ($traitswitch:ident = $arg:tt;) => (
-        !! "behemoth! matrices! error: unrecognized trait switch: " $traitswitch = $arg;
+        !! behemoth! matrices! error: unrecognized trait switch: $traitswitch = $arg;
+    );
+}
+
+#[macro_export]
+macro_rules! _matrix_undefined_error {
+    ($rows:tt, $cols:tt) => (
+        "Error: Matrix undefined. Perhaps you forgot to request it?"
     );
 }
 
@@ -338,18 +346,6 @@ macro_rules! matrices {
         $(
             _matrix_traitswitch!($traitswitch = $arg;);
         )*
-
-        macro_rules! _matrix {
-            $(
-                ($rows, $cols) => ($tyname);
-            )+
-        }
-
-        macro_rules! _matrix_new {
-            $(
-                ($rows, $cols) => ($tyname::new);
-            )+
-        }
 
         macro_rules! _matrix_synonym_check {
             $(
@@ -379,14 +375,12 @@ macro_rules! matrices {
         }
 
         _matrices_auto_mul_impls!($scalar: $($tyname => $rows $cols)+);
-        _matrix_synonym_space_impl!($scalar: { $($tyname => $rows, $cols)+ } $({$($synonym => $dims)+})*);
+        _matrix_synonym_space_impl!($scalar: { $($tyname => $rows, $cols)+ }
+            $({$($synonym => $dims)+})*);
 
         $(
             as_items! {
-                pub type $tyname = DenseMatrix<[[$scalar; $cols]; $rows]>;
-
-                //#[derive(Clone, Copy, Debug, PartialEq)]
-                //pub struct $tyname (pub [[$scalar; $cols]; $rows]);
+                pub type $tyname = DenseMatrix<[[$scalar; $cols]; $rows], [$scalar; $cols], $scalar>;
 
                 impl $tyname {
                     const ROWS: usize = $rows;
@@ -546,7 +540,7 @@ macro_rules! matrices {
                 macro_rules! _matrix_isdef {
                     (true) => (
                         impl Transpose for $tyname {
-                            type Transpose = _matrix!($cols, $rows);
+                            type Transpose = DenseMatrix<[[$scalar; $rows]; $cols], [$scalar; $rows], $scalar>;
 
                             #[inline]
                             fn transpose(&self) -> Self::Transpose {
@@ -719,9 +713,9 @@ macro_rules! matrices {
                 }
 
                 impl Zero for $tyname {
-                    const ZERO: $tyname = DenseMatrix::<[[$scalar; $cols]; $rows]>(
-                        [[<$scalar as Zero>::ZERO; $cols]; $rows]
-                    );
+                    const ZERO: $tyname =
+                        DenseMatrix::<[[$scalar; $cols]; $rows], [$scalar; $cols], $scalar>(
+                            [[<$scalar as Zero>::ZERO; $cols]; $rows], PhantomData);
                 }
             }
 

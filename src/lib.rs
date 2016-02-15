@@ -1,9 +1,11 @@
+#![allow(unused_features)]
 #![feature(log_syntax)]
 #![feature(trace_macros)]
 #![feature(type_macros)]
 #![feature(augmented_assignments)]
 #![feature(op_assign_traits)]
 #![feature(associated_consts)]
+#![feature(unsize)]
 
 #[cfg(any(feature = "matrix_rand", feature = "vector_rand"))]
 extern crate rand;
@@ -75,12 +77,16 @@ macro_rules! behemoth {
             #[cfg(feature = "as_mathematica")]
             use $crate::AsMathematica;
 
-            #[derive(Clone, Copy, Debug)]
-            pub struct DenseMatrix<T>(T);
+            use std::marker::{PhantomData, Unsize};
 
-            impl<T> DenseMatrix<T> {
-                pub fn new(data: T) -> DenseMatrix<T> {
-                    DenseMatrix(data)
+            #[derive(Clone, Copy, Debug)]
+            pub struct DenseMatrix<T, U, V>(T, PhantomData<(U, V)>) where
+                    T: Copy + Unsize<[U]>, U: Copy + Unsize<[V]>, V: Copy;
+
+            impl<T, U, V> DenseMatrix<T, U, V> where
+                    T: Copy + Unsize<[U]>, U: Copy + Unsize<[V]>, V: Copy {
+                pub fn new(data: T) -> DenseMatrix<T, U, V> {
+                    DenseMatrix(data, PhantomData)
                 }
             }
 

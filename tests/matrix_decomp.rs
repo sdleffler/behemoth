@@ -2,13 +2,14 @@
 #![feature(augmented_assignments)]
 #![feature(op_assign_traits)]
 #![feature(type_macros)]
+#![feature(unsize)]
 
 #[macro_use]
 extern crate behemoth;
 
-use behemoth::{ApproxEq, AsMathematica, Transpose};
+use behemoth::{ApproxEq};
 
-use behemoth::decomp::lup;
+use behemoth::decomp::lu;
 
 behemoth! {
     matrices! {
@@ -25,6 +26,6 @@ fn lup_3x3() {
         [5., 2.5,  4.],
         [1.,  2., 0.5]]);
 
-    let (p, l, u) = lup(a);
+    let (p, l, u) = lu(a);
     assert_approx_eq!(a, p * l * u);
 }

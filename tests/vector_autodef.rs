@@ -2,6 +2,7 @@
 #![feature(augmented_assignments)]
 #![feature(op_assign_traits)]
 #![feature(associated_consts)]
+#![feature(unsize)]
 
 #[macro_use] extern crate behemoth;
 use behemoth::ApproxEq;
