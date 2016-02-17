@@ -1,4 +1,4 @@
-use matrix::{Matrix, Square};
+use matrix::traits::{Matrix, Square};
 
 pub fn lu<M>(a: M) -> (M, M, M) where M: Matrix + Square {
     let mut l = M::identity();

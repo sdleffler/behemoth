@@ -11,7 +11,7 @@ use test::Bencher;
 
 #[macro_use] extern crate behemoth;
 
-use behemoth::decomp::lu;
+use behemoth::matrix::decomp::lu;
 
 behemoth! {
     matrices! {

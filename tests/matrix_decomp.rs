@@ -9,7 +9,7 @@ extern crate behemoth;
 
 use behemoth::{ApproxEq};
 
-use behemoth::decomp::lu;
+use behemoth::matrix::decomp::lu;
 
 behemoth! {
     matrices! {

@@ -24,9 +24,11 @@ pub mod mathematica;
 
 pub mod scalar;
 
+#[cfg(feature = "as_mathematica")]
 pub use mathematica::*;
-pub use matrix::*;
+
 pub use traits::*;
+pub use matrix::traits::*;
 
 macro_rules! _behemoth_in_wrapper_check {
     () => (!! format!("Behemoth macros must be used inside the behemoth wrapper macro! Invoked on line {} in {}", line!(), file!()));
