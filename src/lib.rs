@@ -71,7 +71,6 @@ macro_rules! behemoth {
             #[allow(unused_imports)] use $crate::Vector;
             #[allow(unused_imports)] use $crate::Cross;
             #[allow(unused_imports)] use $crate::Dot;
-            #[allow(unused_imports)] use $crate::Metric;
             #[allow(unused_imports)] use $crate::Norm;
 
             #[allow(unused_imports)] use $crate::ApproxEq;
