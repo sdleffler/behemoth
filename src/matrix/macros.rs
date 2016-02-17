@@ -80,28 +80,30 @@ macro_rules! _matrices_auto_mul_impls {
 #[macro_export]
 macro_rules! _matrix_det_impl {
     (1, $s:ident, $scalar:ty) => (
-        $s[0][0]
+        $s.0[0][0]
     );
     (2, $s:ident, $scalar:ty) => (
-        $s[0][0] * $s[1][1] - $s[0][1] * $s[1][0]
+        $s.0[0][0] * $s.0[1][1] - $s.0[0][1] * $s.0[1][0]
     );
     (3, $s:ident, $scalar:ty) => (
-        $s[0][0]*$s[1][1]*$s[2][2] + $s[0][1]*$s[1][2]*$s[2][0] + $s[0][2]*$s[1][0]*$s[2][1] -
-        $s[0][2]*$s[1][1]*$s[2][0] - $s[0][1]*$s[1][0]*$s[2][2] - $s[0][0]*$s[1][2]*$s[2][1]
+        $s.0[0][0]*$s.0[1][1]*$s.0[2][2] + $s.0[0][1]*$s.0[1][2]*$s.0[2][0] +
+            $s.0[0][2]*$s.0[1][0]*$s.0[2][1] -
+        $s.0[0][2]*$s.0[1][1]*$s.0[2][0] - $s.0[0][1]*$s.0[1][0]*$s.0[2][2] -
+            $s.0[0][0]*$s.0[1][2]*$s.0[2][1]
     );
     (4, $s:ident, $scalar:ty) => (
-        $s[0][3]*$s[1][2]*$s[2][1]*$s[3][0] - $s[0][2]*$s[1][3]*$s[2][1]*$s[3][0] -
-        $s[0][3]*$s[1][1]*$s[2][2]*$s[3][0] + $s[0][1]*$s[1][3]*$s[2][2]*$s[3][0] +
-        $s[0][2]*$s[1][1]*$s[2][3]*$s[3][0] - $s[0][1]*$s[1][2]*$s[2][3]*$s[3][0] -
-        $s[0][3]*$s[1][2]*$s[2][0]*$s[3][1] + $s[0][2]*$s[1][3]*$s[2][0]*$s[3][1] +
-        $s[0][3]*$s[1][0]*$s[2][2]*$s[3][1] - $s[0][0]*$s[1][3]*$s[2][2]*$s[3][1] -
-        $s[0][2]*$s[1][0]*$s[2][3]*$s[3][1] + $s[0][0]*$s[1][2]*$s[2][3]*$s[3][1] +
-        $s[0][3]*$s[1][1]*$s[2][0]*$s[3][2] - $s[0][1]*$s[1][3]*$s[2][0]*$s[3][2] -
-        $s[0][3]*$s[1][0]*$s[2][1]*$s[3][2] + $s[0][0]*$s[1][3]*$s[2][1]*$s[3][2] +
-        $s[0][1]*$s[1][0]*$s[2][3]*$s[3][2] - $s[0][0]*$s[1][1]*$s[2][3]*$s[3][2] -
-        $s[0][2]*$s[1][1]*$s[2][0]*$s[3][3] + $s[0][1]*$s[1][2]*$s[2][0]*$s[3][3] +
-        $s[0][2]*$s[1][0]*$s[2][1]*$s[3][3] - $s[0][0]*$s[1][2]*$s[2][1]*$s[3][3] -
-        $s[0][1]*$s[1][0]*$s[2][2]*$s[3][3] + $s[0][0]*$s[1][1]*$s[2][2]*$s[3][3]
+        $s.0[0][3]*$s.0[1][2]*$s.0[2][1]*$s.0[3][0] - $s.0[0][2]*$s.0[1][3]*$s.0[2][1]*$s.0[3][0] -
+        $s.0[0][3]*$s.0[1][1]*$s.0[2][2]*$s.0[3][0] + $s.0[0][1]*$s.0[1][3]*$s.0[2][2]*$s.0[3][0] +
+        $s.0[0][2]*$s.0[1][1]*$s.0[2][3]*$s.0[3][0] - $s.0[0][1]*$s.0[1][2]*$s.0[2][3]*$s.0[3][0] -
+        $s.0[0][3]*$s.0[1][2]*$s.0[2][0]*$s.0[3][1] + $s.0[0][2]*$s.0[1][3]*$s.0[2][0]*$s.0[3][1] +
+        $s.0[0][3]*$s.0[1][0]*$s.0[2][2]*$s.0[3][1] - $s.0[0][0]*$s.0[1][3]*$s.0[2][2]*$s.0[3][1] -
+        $s.0[0][2]*$s.0[1][0]*$s.0[2][3]*$s.0[3][1] + $s.0[0][0]*$s.0[1][2]*$s.0[2][3]*$s.0[3][1] +
+        $s.0[0][3]*$s.0[1][1]*$s.0[2][0]*$s.0[3][2] - $s.0[0][1]*$s.0[1][3]*$s.0[2][0]*$s.0[3][2] -
+        $s.0[0][3]*$s.0[1][0]*$s.0[2][1]*$s.0[3][2] + $s.0[0][0]*$s.0[1][3]*$s.0[2][1]*$s.0[3][2] +
+        $s.0[0][1]*$s.0[1][0]*$s.0[2][3]*$s.0[3][2] - $s.0[0][0]*$s.0[1][1]*$s.0[2][3]*$s.0[3][2] -
+        $s.0[0][2]*$s.0[1][1]*$s.0[2][0]*$s.0[3][3] + $s.0[0][1]*$s.0[1][2]*$s.0[2][0]*$s.0[3][3] +
+        $s.0[0][2]*$s.0[1][0]*$s.0[2][1]*$s.0[3][3] - $s.0[0][0]*$s.0[1][2]*$s.0[2][1]*$s.0[3][3] -
+        $s.0[0][1]*$s.0[1][0]*$s.0[2][2]*$s.0[3][3] + $s.0[0][0]*$s.0[1][1]*$s.0[2][2]*$s.0[3][3]
     );
     ($order:tt, $s:ident, $scalar:ty) => (
         {
@@ -173,7 +175,7 @@ macro_rules! _matrix_id_impl {
         {
             let mut id = <$matrix as Zero>::ZERO;
             for i in 0..$matrix::ROWS {
-                id[i][i] = <$scalar as One>::ONE;
+                id.0[i][i] = <$scalar as One>::ONE;
             }
             id
         }
@@ -424,7 +426,7 @@ macro_rules! matrices {
 
                     #[inline]
                     fn row_mul(mut self, i: usize, m: Self::Scalar) -> Self {
-                        for e in self[i].iter_mut() {
+                        for e in self.0[i].iter_mut() {
                             *e *= m;
                         }
                         self
@@ -433,7 +435,7 @@ macro_rules! matrices {
                     #[inline]
                     fn row_add(mut self, i:usize, j: usize, m: Self::Scalar) -> Self {
                         for k in 0..Self::COLS {
-                            self[i][k] += self[j][k] * m;
+                            self.0[i][k] += self.0[j][k] * m;
                         }
                         self
                     }
@@ -469,7 +471,7 @@ macro_rules! matrices {
 
                     #[inline]
                     fn row_mul_mut(&mut self, i: usize, m: Self::Scalar) {
-                        for e in self[i].iter_mut() {
+                        for e in self.0[i].iter_mut() {
                             *e *= m;
                         }
                     }
@@ -477,7 +479,7 @@ macro_rules! matrices {
                     #[inline]
                     fn row_add_mut(&mut self,  i: usize, j: usize, m: Self::Scalar) {
                         for k in 0..Self::COLS {
-                            self[i][k] += self[j][k] * m;
+                            self.0[i][k] += self.0[j][k] * m;
                         }
                     }
 
@@ -503,40 +505,6 @@ macro_rules! matrices {
                     }
                 }
 
-                impl Index<usize> for $tyname {
-                    type Output = [$scalar; $cols];
-
-                    #[inline(always)]
-                    fn index(&self, idx: usize) -> &[$scalar; $cols] {
-                        &self.0[idx]
-                    }
-                }
-
-                impl IndexMut<usize> for $tyname {
-                    #[inline(always)]
-                    fn index_mut(&mut self, idx: usize) -> &mut [$scalar; $cols] {
-                        &mut self.0[idx]
-                    }
-                }
-
-                impl Index<(usize, usize)> for $tyname {
-                    type Output = $scalar;
-
-                    #[inline(always)]
-                    fn index(&self, idx: (usize, usize)) -> &$scalar {
-                        let (row, col) = idx;
-                        &self[row][col]
-                    }
-                }
-
-                impl IndexMut<(usize, usize)> for $tyname {
-                    #[inline(always)]
-                    fn index_mut(&mut self, idx: (usize, usize)) -> &mut $scalar {
-                        let (row, col) = idx;
-                        &mut self[row][col]
-                    }
-                }
-
                 macro_rules! _matrix_isdef {
                     (true) => (
                         impl Transpose for $tyname {
@@ -547,7 +515,7 @@ macro_rules! matrices {
                                 let mut out = <Self::Transpose as Zero>::ZERO;
                                 for (i, row) in self.iter().enumerate() {
                                     for (j, elem) in row.iter().enumerate() {
-                                        out[j][i] = *elem;
+                                        out.0[j][i] = *elem;
                                     }
                                 }
                                 out
@@ -577,7 +545,7 @@ macro_rules! matrices {
                         let mut out = self;
                         for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
-                                out[i][j] += elem;
+                                out.0[i][j] += elem;
                             }
                         }
                         out
@@ -590,7 +558,7 @@ macro_rules! matrices {
                     fn add_assign(&mut self, rhs: $tyname) {
                         for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
-                                self[i][j] += elem;
+                                self.0[i][j] += elem;
                             }
                         }
                     }
@@ -605,7 +573,7 @@ macro_rules! matrices {
                         let mut out = self;
                         for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
-                                out[i][j] -= elem;
+                                out.0[i][j] -= elem;
                             }
                         }
                         out
@@ -618,7 +586,7 @@ macro_rules! matrices {
                     fn sub_assign(&mut self, rhs: $tyname) {
                         for (i, row) in rhs.iter().enumerate() {
                             for (j, &elem) in row.iter().enumerate() {
-                                self[i][j] -= elem;
+                                self.0[i][j] -= elem;
                             }
                         }
                     }
@@ -756,7 +724,7 @@ macro_rules! matrices {
                         fn identity() -> $tyname {
                             let mut id = <$tyname as Zero>::ZERO;
                             for i in 0..$tyname::ROWS {
-                                id[i][i] = <$scalar as One>::ONE;
+                                id.0[i][i] = <$scalar as One>::ONE;
                             }
                             id
                         }
@@ -804,7 +772,7 @@ macro_rules! matrices {
                         fn from(diags: [$scalar; $rows]) -> Self {
                             let mut empty = $tyname::ZERO;
                             for i in 0..$rows {
-                                empty[i][i] = diags[i];
+                                empty.0[i][i] = diags[i];
                             }
                             empty
                         }

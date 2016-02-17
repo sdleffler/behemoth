@@ -2,7 +2,8 @@ use std::ops::{Add, AddAssign,
                Sub, SubAssign,
                Mul, MulAssign,
                Div, DivAssign,
-               Neg};
+               Neg,
+               Index, IndexMut};
 
 
 /// These two traits are intended simply for holdover until std::num is
@@ -78,4 +79,14 @@ impl ApproxEq for f64 {
         use std::f64;
         (self - other).abs() < f64::EPSILON
     }
+}
+
+pub trait UncheckedIndex<T>: Index<T> {
+    #[inline]
+    unsafe fn index_unchecked<'a>(&'a self, T) -> &'a Self::Output;
+}
+
+pub trait UncheckedIndexMut<T>: UncheckedIndex<T> + IndexMut<T> {
+    #[inline]
+    unsafe fn index_unchecked_mut<'a>(&'a mut self, T) -> &'a mut Self::Output;
 }

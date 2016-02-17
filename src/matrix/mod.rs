@@ -10,7 +10,7 @@ use std::ops::{Add, AddAssign,
                Neg,
                Index, IndexMut};
 
-use traits::{Field, Zero};
+use traits::{Field, UncheckedIndex, UncheckedIndexMut, Zero};
 
 pub trait Matrix: Add<Output=Self> + AddAssign
                 + Sub<Output=Self> + SubAssign
@@ -20,6 +20,8 @@ pub trait Matrix: Add<Output=Self> + AddAssign
                 + Zero
                 + Index<(usize, usize), Output=<Self as Matrix>::Scalar>
                 + IndexMut<(usize, usize)>
+                + UncheckedIndex<(usize, usize)>
+                + UncheckedIndexMut<(usize, usize)>
                 + Clone {
     type Scalar: Field + Mul<Self, Output=Self>;
 

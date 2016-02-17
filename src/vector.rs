@@ -581,6 +581,7 @@ macro_rules! ntuple {
             type Output = $t;
 
             #[allow(non_upper_case_globals)]
+            #[inline]
             fn index(&self, index: usize) -> &$t {
                 _zip_fold_consts!(0usize, $($e),*);
                 match index {
@@ -594,6 +595,7 @@ macro_rules! ntuple {
 
         impl IndexMut<usize> for $name {
             #[allow(non_upper_case_globals)]
+            #[inline]
             fn index_mut(&mut self, index: usize) -> &mut $t {
                 _zip_fold_consts!(0usize, $($e),*);
                 match index {
@@ -601,6 +603,34 @@ macro_rules! ntuple {
                         $e => &mut self.$e,
                     )*
                     _ => panic!("n-tuple vector index out of bounds!"),
+                }
+            }
+        }
+
+        impl UncheckedIndex<usize> for $name {
+            #[allow(non_upper_case_globals)]
+            #[inline]
+            unsafe fn index_unchecked(&self, index: usize) -> &$t {
+                _zip_fold_consts!(0usize, $($e),*);
+                match index {
+                    $(
+                        $e => &self.$e,
+                    )*
+                    _ => unreachable!(),
+                }
+            }
+        }
+
+        impl UncheckedIndexMut<usize> for $name {
+            #[allow(non_upper_case_globals)]
+            #[inline]
+            unsafe fn index_unchecked_mut(&mut self, index: usize) -> &mut $t {
+                _zip_fold_consts!(0usize, $($e),*);
+                match index {
+                    $(
+                        $e => &mut self.$e,
+                    )*
+                    _ => unreachable!(),
                 }
             }
         }

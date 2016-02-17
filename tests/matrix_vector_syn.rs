@@ -4,8 +4,6 @@
 #![feature(type_macros)]
 #![feature(unsize)]
 
-#![feature(log_syntax)]
-
 #[macro_use] extern crate behemoth;
 use behemoth::{ApproxEq, Square};
 
