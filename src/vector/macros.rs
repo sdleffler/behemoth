@@ -665,14 +665,6 @@ macro_rules! euclidean {
                 }
             }
 
-            impl Metric for $name {
-                type Distance = $t;
-
-                fn distance(self, other: $name) -> $t {
-                    (self - other).length()
-                }
-            }
-
             _try_dimension_specific_op!($name $t, $($e)*);
         )+
     );

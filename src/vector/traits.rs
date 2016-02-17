@@ -26,12 +26,6 @@ pub trait Dot: Vector {
     fn dot(self, Self) -> Self::Scalar;
 }
 
-pub trait Metric {
-    type Distance;
-
-    fn distance(self, Self) -> Self::Distance;
-}
-
 pub trait Norm: Vector {
     type Length; // FIXME: Need some way to represent the real numbers (Length must always be real)
 
