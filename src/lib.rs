@@ -153,6 +153,24 @@ macro_rules! behemoth {
                 }
             }
 
+            impl<T, U, V> Deref for DenseMatrix<T, U, V> where
+                    T: Copy + Unsize<[U]>, U: Copy + Unsize<[V]>, V: Copy {
+                type Target = T;
+
+                #[inline]
+                fn deref(&self) -> &T {
+                    &self.0
+                }
+            }
+
+            impl<T, U, V> DerefMut for DenseMatrix<T, U, V> where
+                    T: Copy + Unsize<[U]>, U: Copy + Unsize<[V]>, V: Copy {
+                #[inline]
+                fn deref_mut(&mut self) -> &mut T {
+                    &mut self.0
+                }
+            }
+
             as_items! {
                 $($stuff)*
             }

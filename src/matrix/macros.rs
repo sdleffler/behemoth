@@ -526,16 +526,6 @@ macro_rules! matrices {
                 }
                 _matrix_is_defined!($cols, $rows);
 
-                impl Deref for $tyname {
-                    type Target = [[$scalar; $cols]; $rows];
-
-                    fn deref(&self) -> &[[$scalar; $cols]; $rows] { &self.0 }
-                }
-
-                impl DerefMut for $tyname {
-                    fn deref_mut(&mut self) -> &mut [[$scalar; $cols]; $rows] { &mut self.0 }
-                }
-
                 // FIXME: Special case for matrices nxm with n <= 4, m <= 4
                 impl Add for $tyname {
                     type Output = Self;
